@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="초등학생이 혼자 따라할 수 있는 3x3 루빅스 큐브 가이드. 동작 카드, 애니메이션, 영상 튜토리얼." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="초등학생이 혼자 따라할 수 있는 3x3 루빅스 큐브 가이드. 전체화면 슬라이드와 영상 튜토리얼." />
     <meta property="og:title" content="큐브 배우기 (3학년용)" />
     <meta property="og:description" content="한 단계씩 차근차근 따라하면 큐브가 완성돼요!" />
     <title>큐브 배우기 (3학년용)</title>
@@ -19,19 +19,16 @@
       <header class="hero">
         <h1>큐브 배우기</h1>
         <p>한 단계씩 차근차근 따라하면, 큐브가 완성돼요!</p>
-        <a class="btn btn-primary" href="#meet">시작하기 ▶</a>
+        <button id="start-btn" class="btn btn-primary" type="button">시작하기 ▶</button>
       </header>
 
-      <aside id="nav-mount"></aside>
-      <main id="sections-mount"></main>
-
       <footer class="footer">
-        <div>
+        <p>
           <label style="display:inline-flex;align-items:center;gap:8px;">
             <input type="checkbox" id="tts-toggle" />
             <span>한국어 음성으로 읽어주기</span>
           </label>
-        </div>
+        </p>
         <p style="margin-top:12px;">
           3D 큐브: <a href="https://js.cubing.net/cubing/" target="_blank" rel="noopener">cubing.js</a> (MPL-2.0) ·
           글꼴: <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener">Pretendard</a>
@@ -39,6 +36,7 @@
       </footer>
     </div>
 
+    <div id="slideshow-root"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

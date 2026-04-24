@@ -35,13 +35,14 @@
 
   --font-body: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo",
     "Noto Sans KR", sans-serif;
-  --fs-body: 18px;
-  --fs-lead: 22px;
-  --fs-h3: 24px;
-  --fs-h2: 32px;
-  --fs-h1: 40px;
+  --fs-body: 22px;
+  --fs-lead: 26px;
+  --fs-h3: 28px;
+  --fs-h2: 42px;
+  --fs-h1: 52px;
 
-  --nav-width: 220px;
+  --btn-h: 56px;
+  --btn-h-lg: 72px;
 }
 
 @media (prefers-reduced-motion: reduce) {
