@@ -57,8 +57,10 @@ export const MAIN_STEPS = [
     orientation: "하얀 면을 위로.",
     displayRotation: "",
     algorithm: "",
-    // 완전히 섞인 상태를 보여줘서 "이 상태에서 하얀 십자가를 만들어야 해" 를 전달
-    setupAlg: "R' U2 F R2 F' U2 R' F R F'",
+    // 데모: 앞-아래(DF) 흰-초록 모서리를 F2 로 앞-위(UF)에 올리는 가장 간단한 예시
+    demoAlg: "F2",
+    // inv(F2) = F2 → DF 위치에 흰-초록 모서리(흰색 아래) 세팅
+    setupAlg: "F2",
     tips: [
       "먼저 하얀 모서리 네 개를 위로 올려요.",
       "옆면 색도 가운데 색과 똑같이 맞추면 성공!",

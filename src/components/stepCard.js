@@ -102,9 +102,20 @@ export function renderStepSlide(data, { onComplete } = {}) {
 
   // LEFT: cube + player controls + move sequence
   const left = el("div", { class: "slide-left" });
+  const hasAlg = !!(data.algorithm || data.demoAlg);
   const { wrap, player } = playerBlock(data);
   left.appendChild(wrap);
-  left.appendChild(playerControls(player));
+  if (hasAlg) {
+    left.appendChild(playerControls(player));
+  } else {
+    // 알고리즘 없는 단계 — 직접 연습 안내
+    left.appendChild(
+      el("div", {
+        class: "no-alg-hint",
+        text: "이 단계는 정해진 주문이 없어요. 직접 하얀 모서리를 위로 올려봐요! 🤲",
+      }),
+    );
+  }
 
   if (data.algorithm) {
     left.appendChild(
