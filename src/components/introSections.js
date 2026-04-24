@@ -1,28 +1,29 @@
 import { el } from "../util/dom.js";
 import { COLOR_GUIDE } from "../data/moves.js";
 
-export function renderMeetSection(data) {
-  const section = el("section", { class: "section", id: data.id, "data-step-id": data.id });
-  const card = el("div", { class: "step-card" });
+function mascot(text) {
+  return el("div", { class: "mascot" }, [
+    el("div", { class: "avatar", text: "큐" }),
+    el("div", { class: "bubble", text }),
+  ]);
+}
 
-  card.appendChild(
-    el("div", { class: "head" }, [
-      el("div", { class: "big-num", text: "0" }),
-      el("div", {}, [
-        el("h2", { text: data.title }),
-        el("span", { class: "en", text: data.subtitleEn }),
-      ]),
+function introTitle(title, subtitleEn) {
+  return el("div", { class: "slide-title" }, [
+    el("div", { class: "big-num", text: "0" }),
+    el("div", {}, [
+      el("h2", { text: title }),
+      el("span", { class: "en", text: subtitleEn }),
     ]),
-  );
-  card.appendChild(
-    el("div", { class: "mascot" }, [
-      el("div", { class: "avatar", text: "큐" }),
-      el("div", { class: "bubble", text: data.bubble }),
-    ]),
-  );
+  ]);
+}
 
-  const playerWrap = el("div", { class: "player-wrap" });
-  playerWrap.appendChild(el("div", { class: "player-loading", text: "큐브 준비 중..." }));
+export function renderMeetSlide(data) {
+  const grid = el("div", { class: "slide-grid", "data-step-id": data.id });
+
+  const left = el("div", { class: "slide-left" });
+  const wrap = el("div", { class: "player-wrap" });
+  wrap.appendChild(el("div", { class: "player-loading", text: "큐브 준비 중..." }));
   const player = el("twisty-player", {
     puzzle: "3x3x3",
     "control-panel": "none",
@@ -30,14 +31,16 @@ export function renderMeetSection(data) {
     background: "none",
     alg: "",
   });
-  player.style.width = "100%";
-  player.style.height = "280px";
-  playerWrap.appendChild(player);
-  card.appendChild(playerWrap);
+  wrap.appendChild(player);
+  left.appendChild(wrap);
 
-  const grid = el("div", { class: "piece-grid" });
+  const right = el("div", { class: "slide-right" });
+  right.appendChild(introTitle(data.title, data.subtitleEn));
+  right.appendChild(mascot(data.bubble));
+
+  const pieceGrid = el("div", { class: "piece-grid" });
   (data.pieces || []).forEach((p) => {
-    grid.appendChild(
+    pieceGrid.appendChild(
       el("div", { class: "piece-card" }, [
         el("div", { class: "big-num", text: String(p.count) }),
         el("strong", { text: `${p.name} 조각` }),
@@ -45,79 +48,65 @@ export function renderMeetSection(data) {
       ]),
     );
   });
-  card.appendChild(grid);
+  right.appendChild(pieceGrid);
 
-  section.appendChild(card);
-  return section;
+  grid.appendChild(left);
+  grid.appendChild(right);
+  return { element: grid, player };
 }
 
-export function renderColorsSection(data) {
-  const section = el("section", { class: "section", id: data.id, "data-step-id": data.id });
-  const card = el("div", { class: "step-card" });
+export function renderColorsSlide(data) {
+  const grid = el("div", { class: "slide-grid", "data-step-id": data.id });
 
-  card.appendChild(
-    el("div", { class: "head" }, [
-      el("div", { class: "big-num", text: "0" }),
-      el("div", {}, [
-        el("h2", { text: data.title }),
-        el("span", { class: "en", text: data.subtitleEn }),
-      ]),
-    ]),
-  );
-  card.appendChild(
-    el("div", { class: "mascot" }, [
-      el("div", { class: "avatar", text: "큐" }),
-      el("div", { class: "bubble", text: data.bubble }),
-    ]),
-  );
+  const left = el("div", { class: "slide-left" });
+  const wrap = el("div", { class: "player-wrap" });
+  wrap.appendChild(el("div", { class: "player-loading", text: "큐브 준비 중..." }));
+  const player = el("twisty-player", {
+    puzzle: "3x3x3",
+    "control-panel": "none",
+    "hint-facelets": "none",
+    background: "none",
+    alg: "",
+  });
+  wrap.appendChild(player);
+  left.appendChild(wrap);
+
+  const right = el("div", { class: "slide-right" });
+  right.appendChild(introTitle(data.title, data.subtitleEn));
+  right.appendChild(mascot(data.bubble));
 
   const strip = el("div", { class: "color-strip" });
   COLOR_GUIDE.forEach((c) => {
-    const ink = c.face === "U" ? "#222" : c.face === "D" ? "#222" : "#fff";
+    const ink = c.face === "U" || c.face === "D" ? "#222" : "#fff";
     strip.appendChild(
-      el("div", {
-        class: "cell",
-        style: `background:${c.color};color:${ink};`,
-      }, [
-        el("div", { text: c.ko }),
-        el("div", { class: "move-sub", style: `color:${ink};opacity:.9;`, text: c.text }),
-      ]),
+      el(
+        "div",
+        { class: "cell", style: `background:${c.color};color:${ink};` },
+        [
+          el("div", { text: c.ko }),
+          el("div", { class: "move-sub", style: `color:${ink};opacity:.9;`, text: c.text }),
+        ],
+      ),
     );
   });
-  card.appendChild(strip);
-
-  card.appendChild(
+  right.appendChild(strip);
+  right.appendChild(
     el("p", {
-      class: "move-sub",
-      text: "가운데 조각 색은 절대 바뀌지 않아요. 앞으로 이 자리에 이 색이라고 생각하고 따라오면 돼요.",
+      text: "가운데 조각 색은 절대 바뀌지 않아요. 화면 큐브와 내 큐브 방향을 맞추면 돼요.",
     }),
   );
 
-  section.appendChild(card);
-  return section;
+  grid.appendChild(left);
+  grid.appendChild(right);
+  return { element: grid, player };
 }
 
-export function renderSymbolsSection(data) {
-  const section = el("section", { class: "section", id: data.id, "data-step-id": data.id });
-  const card = el("div", { class: "step-card" });
+export function renderSymbolsSlide(data) {
+  const grid = el("div", { class: "slide-grid", "data-step-id": data.id });
 
-  card.appendChild(
-    el("div", { class: "head" }, [
-      el("div", { class: "big-num", text: "0" }),
-      el("div", {}, [
-        el("h2", { text: data.title }),
-        el("span", { class: "en", text: data.subtitleEn }),
-      ]),
-    ]),
-  );
-  card.appendChild(
-    el("div", { class: "mascot" }, [
-      el("div", { class: "avatar", text: "큐" }),
-      el("div", { class: "bubble", text: data.bubble }),
-    ]),
-  );
-
-  const grid = el("div", { class: "notation-grid" });
+  const left = el("div", { class: "slide-left" });
+  const notationGrid = el("div", { class: "notation-grid" });
+  const players = [];
   (data.moves || []).forEach((m) => {
     const c = el("div", { class: "notation-card" });
     c.appendChild(el("div", { class: "sym", text: m.token }));
@@ -128,8 +117,7 @@ export function renderSymbolsSection(data) {
       background: "none",
       alg: m.token,
     });
-    p.style.width = "100%";
-    p.style.height = "140px";
+    players.push(p);
     c.appendChild(p);
     c.appendChild(el("div", { text: m.tip, class: "move-sub" }));
     c.appendChild(
@@ -145,10 +133,20 @@ export function renderSymbolsSection(data) {
         },
       }),
     );
-    grid.appendChild(c);
+    notationGrid.appendChild(c);
   });
-  card.appendChild(grid);
+  left.appendChild(notationGrid);
 
-  section.appendChild(card);
-  return section;
+  const right = el("div", { class: "slide-right" });
+  right.appendChild(introTitle(data.title, data.subtitleEn));
+  right.appendChild(mascot(data.bubble));
+  right.appendChild(
+    el("p", {
+      text: "기호 이름은 몰라도 괜찮아요. 색 + 화살표 카드만 따라하면 큐브가 맞춰져요.",
+    }),
+  );
+
+  grid.appendChild(left);
+  grid.appendChild(right);
+  return { element: grid, player: players[0] };
 }

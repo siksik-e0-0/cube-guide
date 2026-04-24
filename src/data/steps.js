@@ -9,6 +9,7 @@ export const INTRO_STEPS = [
     title: "큐브 친구를 만나요",
     subtitleEn: "Meet your cube",
     bubble: "큐브는 26개의 작은 조각이 모여 있어요. 가운데 조각의 색은 절대 바뀌지 않아요.",
+    displayRotation: "",
     pieces: [
       { name: "가운데", note: "한 면에 하나. 색의 기준이 돼요.", count: 6 },
       { name: "모서리", note: "두 색이 만나는 조각이에요.", count: 12 },
@@ -20,9 +21,10 @@ export const INTRO_STEPS = [
   {
     id: "colors",
     kind: "intro",
-    title: "색깔 이름 외우기",
+    title: "지금 보이는 큐브 자세",
     subtitleEn: "Color scheme",
-    bubble: "이 가이드는 이 색 순서로 큐브를 잡을 거예요. 조각 색을 기억해 두면 편해요.",
+    bubble: "지금 화면 속 큐브와 내 큐브가 같은 모양이 되도록 잡아요. 단계가 바뀌면 큐브가 같이 돌아가요.",
+    displayRotation: "",
   },
   {
     id: "symbols",
@@ -30,6 +32,7 @@ export const INTRO_STEPS = [
     title: "돌리는 방법 배우기",
     subtitleEn: "How to turn",
     bubble: "각 면을 딱 한 번 돌리는 것부터 해볼게요. 버튼을 눌러 큐브가 어떻게 도는지 봐요.",
+    displayRotation: "",
     moves: [
       { token: "R", tip: "오른쪽 빨간 면을 시계 방향으로." },
       { token: "R'", tip: "오른쪽 빨간 면을 반대로." },
@@ -52,6 +55,7 @@ export const MAIN_STEPS = [
     subtitleEn: "White Cross",
     bubble: "하얀색 십자가를 위에 만들어요. 옆 색도 가운데 조각 색과 꼭 맞춰야 해요.",
     orientation: "하얀 면을 위로.",
+    displayRotation: "",
     algorithm: "",
     setupAlg: "R U R' F R F' R U2 R' U",
     tips: [
@@ -67,8 +71,9 @@ export const MAIN_STEPS = [
     no: 2,
     title: "하얀 꼭짓점 맞추기",
     subtitleEn: "White Corners",
-    bubble: "이제 큐브를 뒤집어서 하양이 아래로 가게 잡아요. 위에서 하얀 꼭짓점을 제자리로 넣어요.",
+    bubble: "이제 큐브를 뒤집어서 하양이 아래로 가게 잡아요. 화면도 같이 돌아가요.",
     orientation: "하얀 면을 아래로. 위는 노랑.",
+    displayRotation: "x2",
     algorithm: "R U R' U'",
     setupAlg: "R U R' U' R U R' U' R U R' U'",
     tips: [
@@ -87,6 +92,7 @@ export const MAIN_STEPS = [
     subtitleEn: "Middle Layer Edges",
     bubble: "가운데 층 네 개의 모서리를 끼워 넣어요. 오른쪽으로 갈지 왼쪽으로 갈지 정한 뒤 주문을 외워요.",
     orientation: "하양은 계속 아래. 노랑이 위.",
+    displayRotation: "x2",
     algorithm: "U R U' R' U' F' U F",
     altAlgorithm: "U' L' U L U F U' F'",
     altLabel: "왼쪽으로 넣을 때",
@@ -107,6 +113,7 @@ export const MAIN_STEPS = [
     subtitleEn: "Yellow Cross",
     bubble: "노란 면 위에 노란 ‘+’ 모양을 만들어요. 모양이 바뀔 때마다 주문을 한 번씩 외워요.",
     orientation: "노란 면이 위.",
+    displayRotation: "x2",
     algorithm: "F R U R' U' F'",
     setupAlg: "F R U R' U' F' U F R U R' U' F'",
     tips: [
@@ -125,6 +132,7 @@ export const MAIN_STEPS = [
     subtitleEn: "Yellow Face (Little Fish)",
     bubble: "노란 꼭짓점까지 전부 노란 면으로 올려요. ‘작은 물고기’ 주문을 반복해요.",
     orientation: "노란 면이 위.",
+    displayRotation: "x2",
     algorithm: "R U R' U R U2 R'",
     setupAlg: "R U R' U R U2 R'",
     tips: [
@@ -143,6 +151,7 @@ export const MAIN_STEPS = [
     subtitleEn: "Permute Corners",
     bubble: "노란 꼭짓점을 올바른 자리로 보내요. 이미 맞는 꼭짓점이 있으면 오른쪽 앞에 두고 주문!",
     orientation: "노란 면이 위.",
+    displayRotation: "x2",
     algorithm: "U R U' L' U R' U' L",
     setupAlg: "U R U' L' U R' U' L U R U' L' U R' U' L",
     tips: [
@@ -161,6 +170,7 @@ export const MAIN_STEPS = [
     subtitleEn: "Permute Edges",
     bubble: "마지막! 노란 모서리 세 개가 돌아가면서 자리를 바꿔요. 이미 맞는 모서리는 뒤쪽에 두세요.",
     orientation: "노란 면이 위.",
+    displayRotation: "x2",
     algorithm: "R U' R U R U R U' R' U' R2",
     setupAlg: "R U' R U R U R U' R' U' R2",
     tips: [
