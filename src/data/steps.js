@@ -57,7 +57,10 @@ export const MAIN_STEPS = [
     orientation: "하얀 면을 위로.",
     displayRotation: "",
     algorithm: "",
-    setupAlg: "R U R' F R F' R U2 R' U",
+    // 데모: 앞-아래(DF) 흰-초록 모서리를 F2 로 앞-위(UF)에 올리는 가장 간단한 예시
+    demoAlg: "F2",
+    // inv(F2) = F2 → DF 위치에 흰-초록 모서리(흰색 아래) 세팅
+    setupAlg: "F2",
     tips: [
       "먼저 하얀 모서리 네 개를 위로 올려요.",
       "옆면 색도 가운데 색과 똑같이 맞추면 성공!",
@@ -75,7 +78,8 @@ export const MAIN_STEPS = [
     orientation: "하얀 면을 아래로. 위는 노랑.",
     displayRotation: "x2",
     algorithm: "R U R' U'",
-    setupAlg: "R U R' U' R U R' U' R U R' U'",
+    // inv(R U R' U') = U R U' R' → 하얀 십자가 유지, 꼭짓점 하나를 위층으로 꺼낸 상태
+    setupAlg: "U R U' R'",
     tips: [
       "위층에서 하얀 스티커가 보이는 꼭짓점을 찾아요.",
       "그 꼭짓점이 들어갈 자리 바로 위에 두고 주문을 반복해요.",
@@ -96,7 +100,8 @@ export const MAIN_STEPS = [
     algorithm: "U R U' R' U' F' U F",
     altAlgorithm: "U' L' U L U F U' F'",
     altLabel: "왼쪽으로 넣을 때",
-    setupAlg: "U R U' R' U' F' U F U2 U' L' U L U F U' F'",
+    // inv(U R U' R' U' F' U F) = F' U' F U R U R' U' → F2L 1층 완성, 모서리 하나 위층에 있는 상태
+    setupAlg: "F' U' F U R U R' U'",
     tips: [
       "위층에서 노랑이 없는 모서리를 찾아요.",
       "앞 스티커 색을 가운데 조각 색과 맞춰요.",
@@ -115,7 +120,8 @@ export const MAIN_STEPS = [
     orientation: "노란 면이 위.",
     displayRotation: "x2",
     algorithm: "F R U R' U' F'",
-    setupAlg: "F R U R' U' F' U F R U R' U' F'",
+    // inv(F R U R' U' F') = F U R U' R' F' → F2L 완성, 위 면은 점/L/선 중 하나인 상태
+    setupAlg: "F U R U' R' F'",
     tips: [
       "점 → ㄴ자 → 선 → 십자 순서로 바뀌어요.",
       "ㄴ자가 있으면 왼쪽 위에 두고 주문!",
@@ -134,7 +140,8 @@ export const MAIN_STEPS = [
     orientation: "노란 면이 위.",
     displayRotation: "x2",
     algorithm: "R U R' U R U2 R'",
-    setupAlg: "R U R' U R U2 R'",
+    // inv(R U R' U R U2 R') = R U2 R' U' R U' R' → 위에 노란 십자가 있고 꼭짓점 방향이 틀린 상태
+    setupAlg: "R U2 R' U' R U' R'",
     tips: [
       "노란 꼭짓점이 1개만 위를 보면, 그 꼭짓점을 왼쪽 앞에 두고 주문!",
       "2개면, 왼쪽 앞 꼭짓점의 노란 스티커가 옆을 보는 쪽에서 주문!",
@@ -153,7 +160,8 @@ export const MAIN_STEPS = [
     orientation: "노란 면이 위.",
     displayRotation: "x2",
     algorithm: "U R U' L' U R' U' L",
-    setupAlg: "U R U' L' U R' U' L U R U' L' U R' U' L",
+    // inv(U R U' L' U R' U' L) = L' U R U' L U R' U' → 노란 면 완성, 꼭짓점 위치만 틀린 상태
+    setupAlg: "L' U R U' L U R' U'",
     tips: [
       "옆 두 색이 둘 다 맞는 꼭짓점을 찾아봐요.",
       "있으면 그 꼭짓점을 오른쪽 앞 아래쪽에 두고 주문.",
@@ -172,7 +180,9 @@ export const MAIN_STEPS = [
     orientation: "노란 면이 위.",
     displayRotation: "x2",
     algorithm: "R U' R U R U R U' R' U' R2",
-    setupAlg: "R U' R U R U R U' R' U' R2",
+    // inv(R U' R U R U R U' R' U' R2) = R2 U R U R' U' R' U' R' U R' (Ub PLL)
+    // → 꼭짓점 완성, 모서리 3개만 반시계 순환 이동된 상태
+    setupAlg: "R2 U R U R' U' R' U' R' U R'",
     tips: [
       "네 모서리 중 이미 맞는 하나를 찾아 뒤쪽에 둬요.",
       "맞는 게 없으면 먼저 한 번 외우고 다시 봐요.",

@@ -365,3 +365,14 @@
   font-size: 32px;
   font-weight: 800;
 }
+
+.no-alg-hint {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--c-step-bg, #f7f4ee);
+  border-radius: var(--radius-md, 12px);
+  font-size: 0.9rem;
+  color: var(--c-text-muted, #666);
+  text-align: center;
+  line-height: 1.5;
+}

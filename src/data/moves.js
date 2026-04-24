@@ -25,6 +25,7 @@ export function parseAlgorithm(alg) {
 
 // Get display metadata for one token (e.g. "R'", "U2", "F").
 export function moveMeta(token) {
+  if (!token) return null;
   // Handle wide moves (lowercase) as same face but labelled "두 층".
   const isWide = /^[rludfb]/.test(token);
   const letter = token[0].toUpperCase();
