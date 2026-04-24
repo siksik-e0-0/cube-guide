@@ -66,7 +66,7 @@ export const MAIN_STEPS = [
       "옆면 색도 가운데 색과 똑같이 맞추면 성공!",
     ],
     checkpoint: "위에서 보면 하얀색 ‘+’ 모양이 보여요.",
-    videoYoutubeId: "",
+    videoYoutubeId: "-H6IdI_5RlU",
   },
   {
     id: "step2",
@@ -86,7 +86,7 @@ export const MAIN_STEPS = [
       "길게 해도 괜찮아요. 최대 다섯 번이면 들어가요.",
     ],
     checkpoint: "아래 한 층이 전부 하얀색이에요.",
-    videoYoutubeId: "",
+    videoYoutubeId: "-H6IdI_5RlU",
   },
   {
     id: "step3",
@@ -108,7 +108,7 @@ export const MAIN_STEPS = [
       "오른쪽 아래로 들어가면 오른쪽 주문, 왼쪽이면 왼쪽 주문!",
     ],
     checkpoint: "위 두 층이 맞춰졌고, 맨 위 면은 아직 엉망이에요.",
-    videoYoutubeId: "",
+    videoYoutubeId: "JLrxTW8poOg",
   },
   {
     id: "step4",
@@ -128,7 +128,7 @@ export const MAIN_STEPS = [
       "선이 있으면 가로로 놓고 주문!",
     ],
     checkpoint: "위에서 보면 노란 ‘+’ 모양이 보여요. 꼭짓점 네 개는 아직 엉망이어도 괜찮아요.",
-    videoYoutubeId: "",
+    videoYoutubeId: "DO3c860861s",
   },
   {
     id: "step5",
@@ -148,7 +148,7 @@ export const MAIN_STEPS = [
       "0개면, 일단 한 번 외우고 다시 보기.",
     ],
     checkpoint: "위 면 전체가 노란색! 옆면은 아직 엉망이어도 괜찮아요.",
-    videoYoutubeId: "",
+    videoYoutubeId: "DO3c860861s",
   },
   {
     id: "step6",
@@ -168,7 +168,7 @@ export const MAIN_STEPS = [
       "없으면 일단 주문을 한 번 하고 다시 찾아봐요.",
     ],
     checkpoint: "꼭짓점 네 개가 모두 자기 자리에 있어요. 모서리만 남았어요!",
-    videoYoutubeId: "",
+    videoYoutubeId: "DO3c860861s",
   },
   {
     id: "step7",
@@ -189,7 +189,7 @@ export const MAIN_STEPS = [
       "이 주문이 끝나면 큐브가 완성돼요!",
     ],
     checkpoint: "큐브가 완성됐어요! 🎉",
-    videoYoutubeId: "",
+    videoYoutubeId: "DO3c860861s",
     isFinal: true,
   },
 ];
