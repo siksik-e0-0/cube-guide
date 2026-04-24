@@ -45,6 +45,19 @@ src/
 └─ styles/                토큰 · 레이아웃 · 컴포넌트 CSS
 ```
 
+## 배포 (GitHub Pages)
+
+`main` 브랜치에 머지되면 `.github/workflows/deploy-pages.yml` 이 자동으로 빌드 → 업로드합니다.
+**최초 1회만** 저장소 설정에서 Pages를 켜 주세요:
+
+1. 저장소 → **Settings** → **Pages**
+2. **Source**: "GitHub Actions" 선택
+3. `main` 브랜치로 머지하거나 Actions 탭에서 "Deploy to GitHub Pages" 를 수동 실행
+4. 배포 끝나면 `https://siksik-e0-0.github.io/cube-guide/` 로 접속 가능
+
+> 비공개 저장소의 경우 GitHub Pro 이상 플랜에서만 Pages 사용 가능.
+> 공개로 전환하면 Free 플랜에서도 사용 가능합니다.
+
 ## 크레딧
 
 - 3D 큐브: [cubing.js](https://js.cubing.net/cubing/) — MPL-2.0
