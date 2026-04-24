@@ -11,12 +11,10 @@ function mascot(text) {
   ]);
 }
 
-// `experimental-setup-alg` 맨 앞에 displayRotation 을 붙여
-// 모든 큐브가 아이가 잡은 모습과 동일한 방향으로 보이게 한다.
+// setupAlg 만 사용한다. displayRotation 을 붙이면 3D 큐브에서
+// F/B 면이 뒤바뀌어 이동 카드(F=초록)와 색이 맞지 않는다.
 function buildSetupAlg(data) {
-  const rot = data.displayRotation ? data.displayRotation + " " : "";
-  const setup = (data.setupAlg || "").trim();
-  return (rot + setup).trim();
+  return (data.setupAlg || "").trim();
 }
 
 function playerBlock(data) {
@@ -40,32 +38,29 @@ function playerBlock(data) {
 
 function playerControls(player) {
   const row = el("div", { class: "player-controls" });
-  row.appendChild(
-    el("button", {
-      class: "btn btn-lg btn-yellow",
-      type: "button",
-      text: "돌려보기 ▶",
-      onClick: () => {
-        try {
-          player.timestamp = 0;
-          player.play();
-        } catch {}
-      },
-    }),
-  );
-  row.appendChild(
-    el("button", {
-      class: "btn btn-lg btn-ghost",
-      type: "button",
-      text: "↺ 다시",
-      onClick: () => {
-        try {
-          player.timestamp = 0;
-          player.pause();
-        } catch {}
-      },
-    }),
-  );
+  const playBtn = el("button", {
+    class: "btn btn-lg btn-yellow",
+    type: "button",
+    text: "돌려보기 ▶",
+    onClick: () => {
+      // twisty-player 커스텀 엘리먼트가 등록된 뒤에만 play() 호출
+      customElements.whenDefined("twisty-player").then(() => {
+        try { player.timestamp = 0; player.play(); } catch {}
+      });
+    },
+  });
+  const resetBtn = el("button", {
+    class: "btn btn-lg btn-ghost",
+    type: "button",
+    text: "↺ 다시",
+    onClick: () => {
+      customElements.whenDefined("twisty-player").then(() => {
+        try { player.timestamp = 0; player.pause(); } catch {}
+      });
+    },
+  });
+  row.appendChild(playBtn);
+  row.appendChild(resetBtn);
   return row;
 }
 

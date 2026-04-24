@@ -11,16 +11,11 @@ function wireTtsToggle() {
 }
 
 async function loadCubing() {
-  // cubing/twisty is heavy; defer until idle so first paint is fast.
-  const run = () =>
-    import("cubing/twisty").catch((err) => {
-      console.error("cubing/twisty 로드 실패", err);
-    });
-  if ("requestIdleCallback" in window) {
-    requestIdleCallback(run, { timeout: 1500 });
-  } else {
-    setTimeout(run, 200);
-  }
+  // twisty-player 커스텀 엘리먼트 등록을 기다리지 않으면 play() 가 실패하므로
+  // idle 지연 없이 즉시 로드한다. 번들은 dynamic import 로 분리 유지.
+  import("cubing/twisty").catch((err) => {
+    console.error("cubing/twisty 로드 실패", err);
+  });
 }
 
 function init() {
