@@ -1,0 +1,56 @@
+:root {
+  --c-bg: #FFFDF7;
+  --c-surface: #FFFFFF;
+  --c-surface-2: #FFF6D6;
+  --c-text: #222222;
+  --c-text-soft: #555555;
+  --c-border: #E8E2CF;
+
+  --c-white: #FFFFFF;
+  --c-yellow: #FFD43B;
+  --c-red: #E03131;
+  --c-orange: #FD7E14;
+  --c-green: #37B24D;
+  --c-blue: #1C7ED6;
+
+  --c-accent: #1C7ED6;
+  --c-accent-ink: #FFFFFF;
+  --c-success: #37B24D;
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --font-body: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo",
+    "Noto Sans KR", sans-serif;
+  --fs-body: 18px;
+  --fs-lead: 22px;
+  --fs-h3: 24px;
+  --fs-h2: 32px;
+  --fs-h1: 40px;
+
+  --nav-width: 220px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
