@@ -1,6 +1,7 @@
 import { qs } from "./util/dom.js";
 import { createSlideshow } from "./components/slideshow.js";
 import { isTtsOn, setTtsOn } from "./components/speech.js";
+import { createScanner } from "./components/scanner.js";
 
 function wireTtsToggle() {
   const box = qs("#tts-toggle");
@@ -31,6 +32,23 @@ function init() {
     startBtn.addEventListener("click", (e) => {
       e.preventDefault();
       slideshow.open();
+    });
+  }
+
+  const scanner = createScanner({
+    onJumpToStep: (stepNo) => {
+      // step1~7 → ALL_STEPS 에서 인트로 3개 다음부터
+      slideshow.open();
+      // 인트로 3개 이후가 step1 → 인덱스 = 3 + stepNo - 1
+      setTimeout(() => slideshow.go(2 + stepNo), 80);
+    },
+  });
+
+  const scanBtn = qs("#scan-btn");
+  if (scanBtn) {
+    scanBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      scanner.open();
     });
   }
 
