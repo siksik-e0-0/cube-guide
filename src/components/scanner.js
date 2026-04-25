@@ -3,7 +3,7 @@ import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER
 import { getStepStateText } from "../lib/lblAnalyzer.js";
 import { generateStepGuide } from "../lib/lblGuide.js";
 import { createPersonalGuide } from "./personalGuide.js";
-import { facesToKPatternData } from "../lib/cubeConverter.js";
+import { findSolvableKPatternData } from "../lib/cubeConverter.js";
 
 // WCA 표준 색 배치 기준 RGB 참조값
 const COLOR_REF = {
@@ -301,12 +301,12 @@ export function createScanner({ onJumpToStep } = {}) {
       validationEl.innerHTML = "";
       const result = validateCubeState(faceCopy);
       if (result.valid) {
-        // L3: 조각 유효성 검사 (3D 변환 가능 여부)
-        const patternData = facesToKPatternData(faceCopy);
+        // L3: 조각 유효성 + parity 검사 (3D 변환 가능 여부)
+        const patternData = findSolvableKPatternData(faceCopy);
         if (!patternData) {
           validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 색상 수는 맞아요!" }));
           validationEl.appendChild(el("div", { class: "scan-error-item",
-            text: "⚠️ 중복 조각이 감지됐어요. 잘못 인식된 스티커를 탭해서 수정하면 3D 가이드를 쓸 수 있어요." }));
+            text: "⚠️ 3D 변환에 실패해요. 잘못 인식된 스티커를 탭해서 수정해보세요." }));
         } else {
           validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 유효한 큐브 상태 — 3D 가이드 사용 가능!" }));
         }
