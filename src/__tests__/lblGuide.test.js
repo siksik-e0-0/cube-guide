@@ -106,7 +106,7 @@ describe("generateStepGuide — stage 5", () => {
     // D[2]=DFR만 노란색
     const f = withOverride(solvedFaces(), { "D.0": "F", "D.6": "L", "D.8": "B" });
     const g = generateStepGuide(5, f);
-    expect(g.orient).toContain("돌린 후");
+    expect(g.orient).toContain("돌려요");
   });
 });
 
@@ -147,7 +147,7 @@ describe("generateStepGuide — stage 6", () => {
     });
     const g = generateStepGuide(6, f);
     expect(g.orient).toContain("DFL");
-    expect(g.orient).toContain("돌린 후");
+    expect(g.orient).toContain("돌려요");
   });
 });
 
@@ -177,6 +177,6 @@ describe("generateStepGuide — stage 7", () => {
     const f = withOverride(solvedFaces(), { "R.7": "F", "B.7": "R", "L.7": "F" });
     const g = generateStepGuide(7, f);
     expect(g.orient).toContain("DF");
-    expect(g.orient).toContain("U2");
+    expect(g.orient).toContain("두 번");
   });
 });
