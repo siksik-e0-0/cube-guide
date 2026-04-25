@@ -127,7 +127,8 @@ function colorGrid(face9, { editable = false, onChange } = {}) {
       cell.style.cursor = "pointer";
       cell.addEventListener("click", () => {
         const faceKeys = Object.keys(COLOR_REF);
-        const next = faceKeys[(faceKeys.indexOf(f) + 1) % faceKeys.length];
+        // face9[idx]로 현재값 읽기 — f는 초기값만 캡처되므로 클릭마다 face9[idx] 사용해야 순환됨
+        const next = faceKeys[(faceKeys.indexOf(face9[idx]) + 1) % faceKeys.length];
         face9[idx] = next;
         cell.style.background = COLOR_REF[next].hex;
         cell.title = COLOR_REF[next].ko;
