@@ -1,4 +1,5 @@
 import { el } from "../util/dom.js";
+import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER } from "../lib/cubeState.js";
 
 // WCA 표준 색 배치 기준 RGB 참조값
 const COLOR_REF = {
@@ -226,13 +227,94 @@ export function createScanner({ onJumpToStep } = {}) {
     }
     currentFaceIdx++;
     if (currentFaceIdx >= FACE_ORDER.length) {
-      showResult();
+      showVerify();
     } else {
       updateUI();
       resultArea.hidden = true;
       videoWrap.hidden = false;
       captureBtn.hidden = false;
     }
+  }
+
+  function showVerify() {
+    videoWrap.hidden = true;
+    captureBtn.hidden = true;
+    resultArea.hidden = true;
+    finalArea.hidden = false;
+    finalArea.innerHTML = "";
+
+    // 편집 가능한 작업 사본
+    const faceCopy = {};
+    for (const face of FACE_ORDER) faceCopy[face] = [...capturedFaces[face]];
+
+    const hint = el("div", { class: "scanner-guide", text: "스티커 색이 내 큐브와 맞는지 확인하세요. 틀리면 탭해서 바꿀 수 있어요." });
+
+    // 십자 레이아웃 (U / L F R B / D)
+    const cross = el("div", { class: "scanner-cross" });
+    const faceKeys = Object.keys(getFaceHex.__map__ || {});
+
+    function makeFaceGrid(face) {
+      const wrap = el("div", { class: `scanner-cross-face scanner-cross-${face.toLowerCase()}` });
+      const grid = el("div", { class: "scan-grid scan-grid-sm" });
+      faceCopy[face].forEach((code, idx) => {
+        const cell = el("div", {
+          class: "scan-cell",
+          style: `background:${getFaceHex(code)}`,
+          title: getFaceKo(code),
+        });
+        cell.style.cursor = "pointer";
+        cell.addEventListener("click", () => {
+          const allFaces = CUBE_FACE_ORDER;
+          const next = allFaces[(allFaces.indexOf(faceCopy[face][idx]) + 1) % allFaces.length];
+          faceCopy[face][idx] = next;
+          cell.style.background = getFaceHex(next);
+          cell.title = getFaceKo(next);
+          renderValidation();
+        });
+        grid.appendChild(cell);
+      });
+      const label = el("div", { class: "scan-face-label", text: face });
+      wrap.appendChild(grid);
+      wrap.appendChild(label);
+      return wrap;
+    }
+
+    for (const face of CUBE_FACE_ORDER) {
+      cross.appendChild(makeFaceGrid(face));
+    }
+
+    // 검증 결과 표시 영역
+    const validationEl = el("div", { class: "scanner-validation" });
+
+    const proceedBtn = el("button", {
+      class: "btn btn-primary btn-lg",
+      type: "button",
+      text: "이 큐브로 시작하기 ▶",
+    });
+
+    function renderValidation() {
+      validationEl.innerHTML = "";
+      const result = validateCubeState(faceCopy);
+      if (result.valid) {
+        validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 유효한 큐브 상태예요!" }));
+        proceedBtn.disabled = false;
+        proceedBtn.style.opacity = "1";
+      } else {
+        result.errors.forEach(err => {
+          validationEl.appendChild(el("div", { class: "scan-error-item", text: `❌ ${err}` }));
+        });
+        proceedBtn.disabled = true;
+        proceedBtn.style.opacity = "0.4";
+      }
+    }
+
+    proceedBtn.onclick = () => {
+      for (const face of FACE_ORDER) capturedFaces[face] = [...faceCopy[face]];
+      showResult();
+    };
+
+    finalArea.append(hint, cross, validationEl, proceedBtn);
+    renderValidation();
   }
 
   function showResult() {

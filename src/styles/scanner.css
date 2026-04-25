@@ -149,6 +149,52 @@
   text-align: center;
 }
 
+/* 큐브 십자 레이아웃 (U / L F R B / D) */
+.scanner-cross {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  grid-template-rows: repeat(3, auto);
+  gap: 4px;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+.scanner-cross-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.scanner-cross-u { grid-column: 2; grid-row: 1; }
+.scanner-cross-l { grid-column: 1; grid-row: 2; }
+.scanner-cross-f { grid-column: 2; grid-row: 2; }
+.scanner-cross-r { grid-column: 3; grid-row: 2; }
+.scanner-cross-b { grid-column: 4; grid-row: 2; }
+.scanner-cross-d { grid-column: 2; grid-row: 3; }
+
+.scan-grid-sm {
+  width: 72px;
+  height: 72px;
+  gap: 3px;
+  border: none;
+}
+.scan-face-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-muted, #888);
+  letter-spacing: 0.05em;
+}
+
+/* 검증 결과 */
+.scanner-validation {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  min-height: 1.5rem;
+}
+.scan-valid { color: #37B24D; font-weight: 700; font-size: 0.95rem; }
+.scan-error-item { color: #E03131; font-size: 0.82rem; line-height: 1.4; }
+
 /* 최종 결과 */
 .scanner-final { text-align: center; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
 .scan-result-msg { padding: 1rem 0; }
