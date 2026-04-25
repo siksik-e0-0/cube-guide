@@ -120,17 +120,30 @@ export function createPersonalGuide({ faces, startStep, onJumpToStep }) {
     const gBox = guideBlock(guide, stateText);
     if (gBox) modal.appendChild(gBox);
 
-    // 다음 단계 버튼
-    const isLast = step >= 7;
-    const nextBtn = el("button", {
-      class: "btn btn-primary btn-lg pg-next",
+    // 이전 / 다음 네비게이션
+    const isFirst = step <= startStep;
+    const isLast  = step >= 7;
+    const nav = el("div", { class: "pg-nav" });
+
+    const prevBtn = el("button", {
+      class: "btn btn-ghost pg-nav-btn",
       type: "button",
-      text: isLast ? "🎉 큐브 완성!" : `${step}단계 완료 → ${step + 1}단계`,
+      text: "◀ 이전",
+      onClick: () => renderStep(step - 1),
+    });
+    if (isFirst) { prevBtn.disabled = true; prevBtn.style.opacity = "0.3"; }
+    nav.appendChild(prevBtn);
+
+    const nextBtn = el("button", {
+      class: `btn btn-primary pg-nav-btn${isLast ? " pg-nav-complete" : ""}`,
+      type: "button",
+      text: isLast ? "🎉 완성!" : "다음 ▶",
       onClick: () => isLast ? renderComplete() : renderStep(step + 1),
     });
-    modal.appendChild(nextBtn);
+    nav.appendChild(nextBtn);
+    modal.appendChild(nav);
 
-    // 튜토리얼 바로가기 (슬라이드쇼 연결)
+    // 튜토리얼 바로가기
     const toSlide = el("button", {
       class: "btn btn-ghost pg-slide-btn",
       type: "button",
