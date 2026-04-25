@@ -3,7 +3,7 @@ import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER
 import { getStepStateText } from "../lib/lblAnalyzer.js";
 import { generateStepGuide } from "../lib/lblGuide.js";
 import { createPersonalGuide } from "./personalGuide.js";
-import { findSolvableKPatternData } from "../lib/cubeConverter.js";
+import { findSolvableKPatternData, findInvalidStickers } from "../lib/cubeConverter.js";
 
 // WCA 표준 색 배치 기준 RGB 참조값
 const COLOR_REF = {
@@ -46,17 +46,23 @@ function sampleFaceColors(video, canvas) {
   const startX = (canvas.width - size) / 2;
   const startY = (canvas.height - size) / 2;
   const cell = size / 3;
+  // 셀 중앙 15% 반경을 블록 평균으로 샘플링 → 노이즈·가장자리 효과 감소
+  const r = Math.max(2, Math.round(cell * 0.15));
 
   const colors = [];
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col < 3; col++) {
-      const x = Math.round(startX + (col + 0.5) * cell);
-      const y = Math.round(startY + (row + 0.5) * cell);
-      const px = ctx.getImageData(x, y, 1, 1).data;
-      colors.push(nearestFace(px[0], px[1], px[2]));
+      const cx = Math.round(startX + (col + 0.5) * cell);
+      const cy = Math.round(startY + (row + 0.5) * cell);
+      const d = r * 2 + 1;
+      const data = ctx.getImageData(cx - r, cy - r, d, d).data;
+      let rv = 0, gv = 0, bv = 0;
+      const n = data.length / 4;
+      for (let i = 0; i < data.length; i += 4) { rv += data[i]; gv += data[i+1]; bv += data[i+2]; }
+      colors.push(nearestFace(Math.round(rv/n), Math.round(gv/n), Math.round(bv/n)));
     }
   }
-  return colors; // 9개 face 문자 배열
+  return colors;
 }
 
 // 54개 스티커 → LBL 단계 감지 (하양 = U 기준)
@@ -258,6 +264,9 @@ export function createScanner({ onJumpToStep } = {}) {
     const cross = el("div", { class: "scanner-cross" });
     const faceKeys = Object.keys(getFaceHex.__map__ || {});
 
+    // 셀 DOM 참조 저장: cellMap["U.3"] = cellElement
+    const cellMap = {};
+
     function makeFaceGrid(face) {
       const wrap = el("div", { class: `scanner-cross-face scanner-cross-${face.toLowerCase()}` });
       const grid = el("div", { class: "scan-grid scan-grid-sm" });
@@ -268,6 +277,7 @@ export function createScanner({ onJumpToStep } = {}) {
           title: getFaceKo(code),
         });
         cell.style.cursor = "pointer";
+        cellMap[`${face}.${idx}`] = cell;
         cell.addEventListener("click", () => {
           const allFaces = CUBE_FACE_ORDER;
           const next = allFaces[(allFaces.indexOf(faceCopy[face][idx]) + 1) % allFaces.length];
@@ -299,14 +309,22 @@ export function createScanner({ onJumpToStep } = {}) {
 
     function renderValidation() {
       validationEl.innerHTML = "";
+      // 모든 셀 테두리 초기화
+      Object.values(cellMap).forEach(c => c.style.outline = "");
+
       const result = validateCubeState(faceCopy);
       if (result.valid) {
-        // L3: 조각 유효성 + parity 검사 (3D 변환 가능 여부)
+        // L3: 조각 유효성 + parity 검사
         const patternData = findSolvableKPatternData(faceCopy);
         if (!patternData) {
+          // 문제 스티커 강조 (빨간 테두리)
+          const badSet = findInvalidStickers(faceCopy);
+          badSet.forEach(key => {
+            if (cellMap[key]) cellMap[key].style.outline = "3px solid #E03131";
+          });
           validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 색상 수는 맞아요!" }));
           validationEl.appendChild(el("div", { class: "scan-error-item",
-            text: "⚠️ 3D 변환에 실패해요. 잘못 인식된 스티커를 탭해서 수정해보세요." }));
+            text: `⚠️ 빨간 테두리 스티커(${badSet.size}개)가 잘못 인식됐어요. 탭해서 올바른 색으로 바꿔주세요.` }));
         } else {
           validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 유효한 큐브 상태 — 3D 가이드 사용 가능!" }));
         }
