@@ -149,6 +149,7 @@ export function createScanner({ onJumpToStep } = {}) {
 
   const videoWrap = el("div", { class: "scanner-video-wrap" });
   const video = el("video", { autoplay: "true", playsinline: "true", muted: "true" });
+  video.muted = true; // Safari: setAttribute 만으로는 muted 프로퍼티가 동기화 안 되어 autoplay 차단될 수 있음
   const canvas = el("canvas", { class: "scanner-canvas-hidden" });
   const svgOverlay = el("div", { class: "scanner-svg-wrap" });
   videoWrap.append(video, canvas, svgOverlay);
@@ -168,7 +169,7 @@ export function createScanner({ onJumpToStep } = {}) {
     class: "btn btn-primary",
     type: "button",
     text: "확인 ▶",
-    onClick: () => confirmFace(),
+    // onClick 없음 — doCapture()에서 onclick 프로퍼티로만 등록해 이중 호출 방지
   });
   resultArea.append(confirmGrid, confirmHint, confirmBtn);
 
@@ -193,7 +194,16 @@ export function createScanner({ onJumpToStep } = {}) {
   }
 
   function doCapture() {
-    const detected = sampleFaceColors(video, canvas);
+    if (!video.srcObject || video.readyState < 2) {
+      guide.textContent = "카메라가 준비 중이에요. 잠시 후 다시 눌러봐요.";
+      return;
+    }
+    let detected;
+    try {
+      detected = sampleFaceColors(video, canvas);
+    } catch {
+      detected = Array(9).fill(currentFace());
+    }
     let mutable = [...detected];
     confirmGrid.innerHTML = "";
     confirmGrid.appendChild(colorGrid(mutable, {
