@@ -4,6 +4,10 @@ import { defineConfig } from "vite";
 // 로컬 dev 서버는 그대로 `/` 에서 돌아간다.
 export default defineConfig(({ command }) => ({
   base: command === "build" ? "/cube-guide/" : "/",
+  build: {
+    // cubing/search 의 Web Worker가 top-level await를 사용하므로 ES2022+ 필요
+    target: "es2022",
+  },
   test: {
     environment: "jsdom",
     coverage: {
