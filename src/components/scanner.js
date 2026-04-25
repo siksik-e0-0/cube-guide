@@ -1,5 +1,6 @@
 import { el } from "../util/dom.js";
 import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER } from "../lib/cubeState.js";
+import { getStepStateText } from "../lib/lblAnalyzer.js";
 
 // WCA 표준 색 배치 기준 RGB 참조값
 const COLOR_REF = {
@@ -332,11 +333,13 @@ export function createScanner({ onJumpToStep } = {}) {
     if (stage === 0) {
       msg.innerHTML = "<div class='big'>🎉 큐브가 이미 완성됐어요!</div>";
     } else {
+      const stateText = getStepStateText(stage, capturedFaces);
       msg.innerHTML = `
         <div class='scan-result-title'>스캔 완료!</div>
         <div class='scan-result-step'>
           <span class='big-num'>${stage}</span>단계부터 시작하면 돼요.
         </div>
+        ${stateText ? `<div class='scan-state-hint'>${stateText}</div>` : ""}
       `;
       const jumpBtn = el("button", {
         class: "btn btn-primary btn-lg",
