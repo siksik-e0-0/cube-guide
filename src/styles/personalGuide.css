@@ -44,10 +44,33 @@
 }
 .pg-close:hover { color: var(--c-text, #222); }
 
+.pg-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 .pg-title {
   font-size: clamp(1.1rem, 4vw, 1.4rem);
   font-weight: 800;
   margin: 0;
+}
+.pg-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.pg-badge-my  { background: #37B24D; color: #fff; }
+.pg-badge-std { background: #aaa;    color: #fff; }
+.pg-convert-warn {
+  font-size: 0.82rem;
+  color: #E03131;
+  background: #fff5f5;
+  border: 1px solid #ffc9c9;
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
 }
 
 /* 3D 플레이어 */

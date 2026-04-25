@@ -102,7 +102,8 @@ export async function getScrambleAlg(faces) {
     const kpattern = new KPattern(kpuzzle, patternData);
     const solution = await experimentalSolve3x3x3IgnoringCenters(kpattern);
     return solution.invert().toString();
-  } catch {
+  } catch (err) {
+    console.error("[cubeConverter] getScrambleAlg 실패:", err);
     return null;
   }
 }
