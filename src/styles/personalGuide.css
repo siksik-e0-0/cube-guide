@@ -1,0 +1,150 @@
+/* Phase 4 개인 가이드 오버레이 */
+.pg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pg-overlay[hidden] { display: none !important; }
+
+.pg-modal {
+  background: var(--c-surface, #fff);
+  border-radius: var(--radius-lg, 24px);
+  padding: 1.25rem;
+  width: min(520px, 95vw);
+  max-height: 92dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+/* 헤더 */
+.pg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pg-progress {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--c-accent, #1C7ED6);
+  letter-spacing: 0.05em;
+}
+.pg-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  color: var(--c-text-soft, #555);
+}
+.pg-close:hover { color: var(--c-text, #222); }
+
+.pg-title {
+  font-size: clamp(1.1rem, 4vw, 1.4rem);
+  font-weight: 800;
+  margin: 0;
+}
+
+/* 3D 플레이어 */
+.pg-player-wrap {
+  position: relative;
+  background: #F7F2E3;
+  border-radius: var(--radius, 16px);
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 200px;
+}
+.pg-player-wrap twisty-player {
+  width: 100%;
+  height: 100%;
+  --tw-background: transparent;
+}
+.pg-player-loading {
+  position: absolute;
+  color: var(--c-text-soft, #555);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+/* 재생 버튼 */
+.pg-play { width: 100%; }
+
+/* 가이드 텍스트 박스 */
+.pg-guide-box {
+  border-top: 1px solid var(--c-border, #e8e2cf);
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.pg-state-text {
+  font-size: 0.88rem;
+  color: var(--c-text-soft, #555);
+  background: var(--c-surface-2, #FFF6D6);
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.pg-guide-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.pg-guide-label {
+  flex: 0 0 auto;
+  font-weight: 700;
+  font-size: 0.72rem;
+  background: var(--c-accent, #1C7ED6);
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.pg-alg {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: var(--c-surface-2, #FFF6D6);
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.03em;
+}
+.pg-note {
+  font-size: 0.78rem;
+  color: var(--c-text-soft, #888);
+  line-height: 1.4;
+}
+
+/* 다음 단계 버튼 */
+.pg-next { width: 100%; }
+.pg-slide-btn { width: 100%; font-size: 15px; }
+
+/* 로딩 */
+.pg-loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--c-text-soft, #555);
+  font-size: 1rem;
+}
+
+/* 완성 화면 */
+.pg-complete {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1rem;
+}
+.pg-complete-icon { font-size: 3rem; }
+.pg-complete-msg { font-size: 1.4rem; font-weight: 800; }

@@ -2,6 +2,7 @@ import { el } from "../util/dom.js";
 import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER } from "../lib/cubeState.js";
 import { getStepStateText } from "../lib/lblAnalyzer.js";
 import { generateStepGuide } from "../lib/lblGuide.js";
+import { createPersonalGuide } from "./personalGuide.js";
 
 // WCA 표준 색 배치 기준 RGB 참조값
 const COLOR_REF = {
@@ -350,16 +351,29 @@ export function createScanner({ onJumpToStep } = {}) {
         ${stateText ? `<div class='scan-state-hint'>${stateText}</div>` : ""}
         ${guideRows ? `<div class='scan-guide-block'>${guideRows}</div>` : ""}
       `;
-      const jumpBtn = el("button", {
+      // 3D 개인 가이드
+      const guideBtn = el("button", {
         class: "btn btn-primary btn-lg",
         type: "button",
-        text: `${stage}단계로 이동하기 ▶`,
+        text: "내 큐브 3D 가이드 ▶",
         onClick: () => {
-          close();
-          onJumpToStep?.(stage);
+          const pg = createPersonalGuide({
+            faces: { ...capturedFaces },
+            startStep: stage,
+            onJumpToStep: (step) => { close(); onJumpToStep?.(step); },
+          });
+          pg.open();
         },
       });
+      // 튜토리얼 바로가기 (기존 버튼 유지)
+      const jumpBtn = el("button", {
+        class: "btn btn-ghost",
+        type: "button",
+        text: "튜토리얼 해당 단계로 →",
+        onClick: () => { close(); onJumpToStep?.(stage); },
+      });
       finalArea.appendChild(msg);
+      finalArea.appendChild(guideBtn);
       finalArea.appendChild(jumpBtn);
       return;
     }
