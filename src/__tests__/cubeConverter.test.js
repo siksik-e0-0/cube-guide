@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { facesToKPatternData } from "../lib/cubeConverter.js";
+import { facesToKPatternData, findSolvableKPatternData } from "../lib/cubeConverter.js";
 
 function solvedFaces() {
   const f = {};
@@ -77,6 +77,35 @@ describe("facesToKPatternData", () => {
   it("BL 엣지 스캔 좌표 검증: B[5]/L[3] → 슬롯11 피스11", () => {
     const data = facesToKPatternData(solvedFaces());
     expect(data.EDGES.pieces[11]).toBe(11); // BL piece
+  });
+
+  it("findSolvableKPatternData — 완성 큐브(solved) 반환", () => {
+    const data = findSolvableKPatternData(solvedFaces());
+    expect(data).not.toBeNull();
+    expect(data.CORNERS.pieces).toEqual([0,1,2,3,4,5,6,7]);
+  });
+
+  it("findSolvableKPatternData — U면 180° 회전된 faces도 solvable 반환", () => {
+    // U면을 180° 회전시킨 faces (내 가정과 다른 방향으로 촬영된 케이스)
+    const faces = solvedFaces();
+    const uRotated = [faces.U[8],faces.U[7],faces.U[6], faces.U[5],faces.U[4],faces.U[3], faces.U[2],faces.U[1],faces.U[0]];
+    const rotatedFaces = { ...faces, U: uRotated };
+    // facesToKPatternData는 null이거나 unsolvable일 수 있음
+    // findSolvableKPatternData는 올바른 rotation을 찾아 반환해야 함
+    const data = findSolvableKPatternData(rotatedFaces);
+    expect(data).not.toBeNull();
+    // solvable 상태여야 함 (corner orientation sum % 3 === 0 등)
+    const cSum = data.CORNERS.orientation.reduce((a,b) => a+b, 0);
+    expect(cSum % 3).toBe(0);
+    const eSum = data.EDGES.orientation.reduce((a,b) => a+b, 0);
+    expect(eSum % 2).toBe(0);
+  });
+
+  it("findSolvableKPatternData — 완전히 잘못된 faces는 null 반환", () => {
+    // 같은 색만 있는 완전히 잘못된 데이터
+    const bad = {};
+    for (const f of ["U","R","F","D","L","B"]) bad[f] = Array(9).fill("U");
+    expect(findSolvableKPatternData(bad)).toBeNull();
   });
 
   it("UFR 코너를 다른 색으로 바꾸면 슬롯0 피스 변경", () => {
