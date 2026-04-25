@@ -207,6 +207,16 @@
   font-size: 1.1rem;
   font-weight: 600;
 }
+.scan-state-hint {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-muted, #666);
+  background: var(--color-step-bg, #f7f4ee);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  text-align: center;
+}
+
 .scan-result-step .big-num {
   font-size: 2.5rem;
   font-weight: 900;
