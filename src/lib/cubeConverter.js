@@ -65,21 +65,46 @@ const EDGE_SLOTS = [
   [["B",5],["L",3]], // slot 11: BL
 ];
 
-// 유효하지 않은 코너/엣지에 포함된 스티커 위치를 "Face.idx" 형식 Set으로 반환
+// 유효하지 않은 코너/엣지(잘못된 색 조합 OR 중복 조각)의 스티커 위치를
+// "Face.idx" 형식 Set으로 반환
 export function findInvalidStickers(faces) {
   const bad = new Set();
-  for (const [[f0,i0],[f1,i1],[f2,i2]] of CORNER_SLOTS) {
+
+  // 코너: 잘못된 조합 + 중복 조각 감지
+  const cornerSeen = new Map(); // key → firstSlotStickers
+  for (const slot of CORNER_SLOTS) {
+    const [[f0,i0],[f1,i1],[f2,i2]] = slot;
     const c = [faces[f0][i0], faces[f1][i1], faces[f2][i2]];
-    if (!CORNER_MAP.has([...c].sort().join(""))) {
+    const key = [...c].sort().join("");
+    if (!CORNER_MAP.has(key)) {
       bad.add(`${f0}.${i0}`); bad.add(`${f1}.${i1}`); bad.add(`${f2}.${i2}`);
+    } else if (cornerSeen.has(key)) {
+      // 중복 조각: 이전 슬롯도 함께 표시
+      const prev = cornerSeen.get(key);
+      prev.forEach(s => bad.add(s));
+      bad.add(`${f0}.${i0}`); bad.add(`${f1}.${i1}`); bad.add(`${f2}.${i2}`);
+    } else {
+      cornerSeen.set(key, [`${f0}.${i0}`, `${f1}.${i1}`, `${f2}.${i2}`]);
     }
   }
-  for (const [[f0,i0],[f1,i1]] of EDGE_SLOTS) {
+
+  // 엣지: 잘못된 조합 + 중복 조각 감지
+  const edgeSeen = new Map();
+  for (const slot of EDGE_SLOTS) {
+    const [[f0,i0],[f1,i1]] = slot;
     const c0 = faces[f0][i0], c1 = faces[f1][i1];
-    if (!EDGE_MAP.has([c0,c1].sort().join(""))) {
+    const key = [c0, c1].sort().join("");
+    if (!EDGE_MAP.has(key)) {
       bad.add(`${f0}.${i0}`); bad.add(`${f1}.${i1}`);
+    } else if (edgeSeen.has(key)) {
+      const prev = edgeSeen.get(key);
+      prev.forEach(s => bad.add(s));
+      bad.add(`${f0}.${i0}`); bad.add(`${f1}.${i1}`);
+    } else {
+      edgeSeen.set(key, [`${f0}.${i0}`, `${f1}.${i1}`]);
     }
   }
+
   return bad;
 }
 
