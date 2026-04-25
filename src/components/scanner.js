@@ -1,6 +1,7 @@
 import { el } from "../util/dom.js";
 import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER } from "../lib/cubeState.js";
 import { getStepStateText } from "../lib/lblAnalyzer.js";
+import { generateStepGuide } from "../lib/lblGuide.js";
 
 // WCA 표준 색 배치 기준 RGB 참조값
 const COLOR_REF = {
@@ -334,12 +335,20 @@ export function createScanner({ onJumpToStep } = {}) {
       msg.innerHTML = "<div class='big'>🎉 큐브가 이미 완성됐어요!</div>";
     } else {
       const stateText = getStepStateText(stage, capturedFaces);
+      const guide = generateStepGuide(stage, capturedFaces);
+      const guideRows = guide && !guide.done ? [
+        guide.orient  ? `<div class='scan-guide-row'><span class='scan-guide-label'>잡는 방법</span>${guide.orient}</div>` : "",
+        guide.algorithm ? `<div class='scan-guide-row'><span class='scan-guide-label'>알고리즘</span><code class='scan-guide-alg'>${guide.algorithm}</code></div>` : "",
+        guide.note    ? `<div class='scan-guide-note'>${guide.note}</div>` : "",
+      ].filter(Boolean).join("") : "";
+
       msg.innerHTML = `
         <div class='scan-result-title'>스캔 완료!</div>
         <div class='scan-result-step'>
           <span class='big-num'>${stage}</span>단계부터 시작하면 돼요.
         </div>
         ${stateText ? `<div class='scan-state-hint'>${stateText}</div>` : ""}
+        ${guideRows ? `<div class='scan-guide-block'>${guideRows}</div>` : ""}
       `;
       const jumpBtn = el("button", {
         class: "btn btn-primary btn-lg",
