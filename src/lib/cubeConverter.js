@@ -65,6 +65,24 @@ const EDGE_SLOTS = [
   [["B",5],["L",3]], // slot 11: BL
 ];
 
+// 유효하지 않은 코너/엣지에 포함된 스티커 위치를 "Face.idx" 형식 Set으로 반환
+export function findInvalidStickers(faces) {
+  const bad = new Set();
+  for (const [[f0,i0],[f1,i1],[f2,i2]] of CORNER_SLOTS) {
+    const c = [faces[f0][i0], faces[f1][i1], faces[f2][i2]];
+    if (!CORNER_MAP.has([...c].sort().join(""))) {
+      bad.add(`${f0}.${i0}`); bad.add(`${f1}.${i1}`); bad.add(`${f2}.${i2}`);
+    }
+  }
+  for (const [[f0,i0],[f1,i1]] of EDGE_SLOTS) {
+    const c0 = faces[f0][i0], c1 = faces[f1][i1];
+    if (!EDGE_MAP.has([c0,c1].sort().join(""))) {
+      bad.add(`${f0}.${i0}`); bad.add(`${f1}.${i1}`);
+    }
+  }
+  return bad;
+}
+
 // ── 면 회전 유틸 ────────────────────────────────────────────────────────────
 
 // 3×3 면 배열을 90° 시계방향으로 회전
