@@ -171,15 +171,19 @@ export function createSlideshow(mountRoot) {
   });
   container.tabIndex = -1;
 
-  // Touch swipe
+  // Touch swipe — twisty-player 위 드래그는 큐브 회전 용도이므로 슬라이드 이동 차단
   let touchStartX = 0;
   let touchStartY = 0;
+  let swipeBlocked = false;
   track.addEventListener("touchstart", (e) => {
+    swipeBlocked = !!e.target.closest("twisty-player");
+    if (swipeBlocked) return;
     const t = e.touches[0];
     touchStartX = t.clientX;
     touchStartY = t.clientY;
   }, { passive: true });
   track.addEventListener("touchend", (e) => {
+    if (swipeBlocked) { swipeBlocked = false; return; }
     const t = e.changedTouches[0];
     const dx = t.clientX - touchStartX;
     const dy = t.clientY - touchStartY;
