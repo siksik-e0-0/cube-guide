@@ -148,6 +148,48 @@
   line-height: 1.4;
 }
 
+/* 2D 면 십자 레이아웃 (3D 변환 실패 시) */
+.pg-face-cross {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  grid-template-rows: repeat(3, auto);
+  gap: 4px;
+  justify-content: center;
+  margin: 0.25rem 0;
+}
+.pg-cross-face { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.pg-cross-u { grid-column: 2; grid-row: 1; }
+.pg-cross-l { grid-column: 1; grid-row: 2; }
+.pg-cross-f { grid-column: 2; grid-row: 2; }
+.pg-cross-r { grid-column: 3; grid-row: 2; }
+.pg-cross-b { grid-column: 4; grid-row: 2; }
+.pg-cross-d { grid-column: 2; grid-row: 3; }
+.pg-cross-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  width: 66px;
+  height: 66px;
+  border: 1.5px solid var(--c-border, #e8e2cf);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.pg-cross-cell { border-radius: 2px; }
+.pg-cross-label { font-size: 0.65rem; font-weight: 700; color: var(--c-text-soft, #888); }
+
+/* 알고리즘 전용 작은 플레이어 레이블 */
+.pg-player-label {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.7);
+  background: rgba(0,0,0,0.35);
+  padding: 1px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
 /* 이전 / 다음 네비게이션 */
 .pg-nav {
   display: flex;

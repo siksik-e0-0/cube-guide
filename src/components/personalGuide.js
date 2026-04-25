@@ -3,6 +3,28 @@ import { MAIN_STEPS } from "../data/steps.js";
 import { generateStepGuide } from "../lib/lblGuide.js";
 import { getStepStateText } from "../lib/lblAnalyzer.js";
 import { getScrambleAlg } from "../lib/cubeConverter.js";
+import { getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER } from "../lib/cubeState.js";
+
+// 스캔 faces 데이터를 2D 십자 레이아웃으로 렌더링 (3D 변환 실패 시 대체 표시)
+function buildFaceCross(faces) {
+  const cross = el("div", { class: "pg-face-cross" });
+  const order = ["U", "L", "F", "R", "B", "D"];
+  for (const face of order) {
+    const wrap = el("div", { class: `pg-cross-face pg-cross-${face.toLowerCase()}` });
+    const grid = el("div", { class: "pg-cross-grid" });
+    (faces[face] || []).forEach(code => {
+      grid.appendChild(el("div", {
+        class: "pg-cross-cell",
+        style: `background:${getFaceHex(code)}`,
+        title: getFaceKo(code),
+      }));
+    });
+    wrap.appendChild(grid);
+    wrap.appendChild(el("div", { class: "pg-cross-label", text: face }));
+    cross.appendChild(wrap);
+  }
+  return cross;
+}
 
 function stepData(step) {
   return MAIN_STEPS.find(s => s.no === step) ?? null;
@@ -91,18 +113,26 @@ export function createPersonalGuide({ faces, startStep, onJumpToStep }) {
     }));
     modal.appendChild(titleRow);
 
+    // 첫 단계 & 변환 실패 → 스캔한 면 2D 그리드 표시 (잘못된 3D 대신)
     if (step === startStep && !scrambleAlg) {
       modal.appendChild(el("div", { class: "pg-convert-warn",
-        text: "⚠️ 큐브 3D 변환에 실패했어요. 잘못 인식된 스티커가 있을 수 있어요." }));
+        text: "⚠️ 3D 변환 실패 — 스캔 이미지로 대신 표시해요. 알고리즘 안내는 정확합니다." }));
+      modal.appendChild(buildFaceCross(faces));
     }
 
-    // twisty-player: 첫 단계는 사용자 실제 큐브 (scrambleAlg), 이후는 표준 setupAlg
+    // twisty-player: 첫 단계 & 변환 성공 = 실제 큐브, 나머지 = 표준 setupAlg
     const setup = isMyState ? scrambleAlg : (data.setupAlg || "");
     const alg   = guide?.algorithm || data.algorithm || data.demoAlg || "";
     const wrap = el("div", { class: "pg-player-wrap" });
     wrap.appendChild(el("div", { class: "pg-player-loading", text: "큐브 준비 중..." }));
     const player = playerEl(setup, alg);
     wrap.appendChild(player);
+    if (step === startStep && !scrambleAlg) {
+      // 변환 실패: 3D는 알고리즘 애니메이션 전용으로 작게 표시
+      wrap.style.aspectRatio = "3/2";
+      wrap.style.minHeight = "140px";
+      wrap.appendChild(el("div", { class: "pg-player-label", text: "알고리즘 애니메이션 (표준 예시)" }));
+    }
     modal.appendChild(wrap);
 
     // 재생 버튼
