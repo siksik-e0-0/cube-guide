@@ -148,8 +148,17 @@
   line-height: 1.4;
 }
 
-/* 다음 단계 버튼 */
-.pg-next { width: 100%; }
+/* 이전 / 다음 네비게이션 */
+.pg-nav {
+  display: flex;
+  gap: 0.75rem;
+}
+.pg-nav-btn {
+  flex: 1;
+  min-height: var(--btn-h-lg, 72px);
+  font-size: 18px;
+}
+.pg-nav-complete { background: #37B24D; color: #fff; }
 .pg-slide-btn { width: 100%; font-size: 15px; }
 
 /* 로딩 */
