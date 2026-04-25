@@ -152,20 +152,41 @@ function isSolvable(pd) {
   return permutationParity(pd.CORNERS.pieces) === permutationParity(pd.EDGES.pieces);
 }
 
-// U/D 면만 4×4=16 조합 시도.
-// 옆면(R/F/L/B)은 항상 "하양(U)이 위"로 촬영하도록 안내하므로 회전 시도 제외.
-// 옆면까지 임의 회전하면 물리적으로 잘못된 상태를 "유효"로 오인할 수 있음.
-export function findSolvableKPatternData(faces) {
-  for (let uR = 0; uR < 4; uR++) {
-    for (let dR = 0; dR < 4; dR++) {
-      const pd = facesToKPatternData({
-        ...faces,
-        U: rotateFaceN(faces.U, uR),
-        D: rotateFaceN(faces.D, dR),
-      });
-      if (pd && isSolvable(pd)) return pd;
-    }
+const FACE_KEYS = ["U", "R", "F", "D", "L", "B"];
+
+// U/D 16조합 탐색 (내부 헬퍼)
+function searchUD(faces) {
+  for (let uR = 0; uR < 4; uR++)
+  for (let dR = 0; dR < 4; dR++) {
+    const pd = facesToKPatternData({
+      ...faces,
+      U: rotateFaceN(faces.U, uR),
+      D: rotateFaceN(faces.D, dR),
+    });
+    if (pd && isSolvable(pd)) return pd;
   }
+  return null;
+}
+
+// 풀이 가능한 KPatternData 탐색:
+// 1단계: U/D 면만 4×4=16 조합 (가장 흔한 경우)
+// 2단계: 영상 전체 회전 보정 × 16 — 기기 가로/세로 모드 불일치로
+//        모든 면이 동일하게 회전 촬영된 경우 대응 (64 조합 추가)
+// 옆면(R/F/L/B)을 개별적으로 임의 회전하면 물리적으로 틀린 상태를
+// "유효"로 오인할 수 있으므로 전체 일괄 회전만 허용.
+export function findSolvableKPatternData(faces) {
+  // 1단계: 표준 탐색
+  const r0 = searchUD(faces);
+  if (r0) return r0;
+
+  // 2단계: 영상 방향 보정 (90°/180°/270° 일괄 회전)
+  for (let g = 1; g <= 3; g++) {
+    const rotAll = {};
+    for (const f of FACE_KEYS) rotAll[f] = rotateFaceN(faces[f], g);
+    const rg = searchUD(rotAll);
+    if (rg) return rg;
+  }
+
   return null;
 }
 
