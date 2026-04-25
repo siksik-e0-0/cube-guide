@@ -317,14 +317,21 @@ export function createScanner({ onJumpToStep } = {}) {
         // L3: 조각 유효성 + parity 검사
         const patternData = findSolvableKPatternData(faceCopy);
         if (!patternData) {
-          // 문제 스티커 강조 (빨간 테두리)
           const badSet = findInvalidStickers(faceCopy);
-          badSet.forEach(key => {
-            if (cellMap[key]) cellMap[key].style.outline = "3px solid #E03131";
-          });
-          validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 색상 수는 맞아요!" }));
-          validationEl.appendChild(el("div", { class: "scan-error-item",
-            text: `⚠️ 빨간 테두리 스티커(${badSet.size}개)가 잘못 인식됐어요. 탭해서 올바른 색으로 바꿔주세요.` }));
+          if (badSet.size > 0) {
+            // 잘못된 색상 조합 → 빨간 테두리 강조
+            badSet.forEach(key => {
+              if (cellMap[key]) cellMap[key].style.outline = "3px solid #E03131";
+            });
+            validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 색상 수는 맞아요!" }));
+            validationEl.appendChild(el("div", { class: "scan-error-item",
+              text: `❌ 빨간 테두리 스티커(${badSet.size}개)가 잘못 인식됐어요. 탭해서 올바른 색으로 바꿔주세요.` }));
+          } else {
+            // 조각 조합은 정상이지만 orientation parity 실패 → 촬영 방향 문제
+            validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 조각 색상은 정상이에요!" }));
+            validationEl.appendChild(el("div", { class: "scan-error-item",
+              text: "⚠️ 3D 변환 실패 — 촬영 방향 문제일 수 있어요. R/F/L/B 면은 반드시 하얀(U)면이 화면 위쪽에 오도록 잡고 다시 촬영해보세요." }));
+          }
         } else {
           validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 유효한 큐브 상태 — 3D 가이드 사용 가능!" }));
         }
