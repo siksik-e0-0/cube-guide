@@ -109,19 +109,37 @@ function isSolvable(pd) {
   return permutationParity(pd.CORNERS.pieces) === permutationParity(pd.EDGES.pieces);
 }
 
-// U/D 면 촬영 방향이 가정과 다를 수 있으므로 4×4=16 가지 회전 조합을 시도해
-// 풀이 가능한 KPatternData를 반환. 찾지 못하면 null.
+// 모든 6면의 4가지 회전 조합(4^6=4096)을 시도해 풀이 가능한 KPatternData를 반환.
+// 각 면이 어떤 방향으로 촬영됐든 자동 보정됨. 찾지 못하면 null.
+// 각 facesToKPatternData 호출은 <1ms → 전체 최악 ~4096회, 실용적 범위.
 export function findSolvableKPatternData(faces) {
-  for (let uRot = 0; uRot < 4; uRot++) {
-    for (let dRot = 0; dRot < 4; dRot++) {
-      const testFaces = {
-        ...faces,
-        U: rotateFaceN(faces.U, uRot),
-        D: rotateFaceN(faces.D, dRot),
-      };
-      const pd = facesToKPatternData(testFaces);
-      if (pd && isSolvable(pd)) return pd;
-    }
+  // U/D 부터 시도해 가장 흔한 경우(표준 촬영)를 빠르게 처리
+  for (let uR = 0; uR < 4; uR++)
+  for (let dR = 0; dR < 4; dR++) {
+    const pd = facesToKPatternData({
+      ...faces,
+      U: rotateFaceN(faces.U, uR),
+      D: rotateFaceN(faces.D, dR),
+    });
+    if (pd && isSolvable(pd)) return pd;
+  }
+  // 나머지: 옆면(R/F/L/B) 회전도 포함한 전체 탐색
+  for (let uR = 0; uR < 4; uR++)
+  for (let rR = 0; rR < 4; rR++)
+  for (let fR = 0; fR < 4; fR++)
+  for (let dR = 0; dR < 4; dR++)
+  for (let lR = 0; lR < 4; lR++)
+  for (let bR = 0; bR < 4; bR++) {
+    if (rR === 0 && fR === 0 && lR === 0 && bR === 0) continue; // 위에서 이미 처리
+    const pd = facesToKPatternData({
+      U: rotateFaceN(faces.U, uR),
+      R: rotateFaceN(faces.R, rR),
+      F: rotateFaceN(faces.F, fR),
+      D: rotateFaceN(faces.D, dR),
+      L: rotateFaceN(faces.L, lR),
+      B: rotateFaceN(faces.B, bR),
+    });
+    if (pd && isSolvable(pd)) return pd;
   }
   return null;
 }

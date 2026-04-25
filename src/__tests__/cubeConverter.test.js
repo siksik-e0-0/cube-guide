@@ -101,6 +101,17 @@ describe("facesToKPatternData", () => {
     expect(eSum % 2).toBe(0);
   });
 
+  it("findSolvableKPatternData — F면 90° 회전된 faces도 solvable 반환", () => {
+    const faces = solvedFaces();
+    // F면을 90° CW 회전 (옆면 촬영 방향 오류 케이스)
+    const fRotated = [faces.F[6],faces.F[3],faces.F[0], faces.F[7],faces.F[4],faces.F[1], faces.F[8],faces.F[5],faces.F[2]];
+    const rotatedFaces = { ...faces, F: fRotated };
+    const data = findSolvableKPatternData(rotatedFaces);
+    expect(data).not.toBeNull();
+    const cSum = data.CORNERS.orientation.reduce((a,b) => a+b, 0);
+    expect(cSum % 3).toBe(0);
+  });
+
   it("findSolvableKPatternData — 완전히 잘못된 faces는 null 반환", () => {
     // 같은 색만 있는 완전히 잘못된 데이터
     const bad = {};
