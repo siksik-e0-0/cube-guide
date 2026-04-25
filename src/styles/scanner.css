@@ -1,4 +1,5 @@
 /* display:flex/grid 가 hidden 속성의 display:none 을 덮어쓰는 문제 방지 */
+.scanner-overlay[hidden],
 .scanner-result[hidden],
 .scanner-final[hidden] {
   display: none !important;
