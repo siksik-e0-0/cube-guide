@@ -3,6 +3,7 @@ import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER
 import { getStepStateText } from "../lib/lblAnalyzer.js";
 import { generateStepGuide } from "../lib/lblGuide.js";
 import { createPersonalGuide } from "./personalGuide.js";
+import { facesToKPatternData } from "../lib/cubeConverter.js";
 
 // WCA 표준 색 배치 기준 RGB 참조값
 const COLOR_REF = {
@@ -16,13 +17,14 @@ const COLOR_REF = {
 
 // 스캔 순서: U → R → F → D → L → B (WCA 표준)
 const FACE_ORDER = ["U", "R", "F", "D", "L", "B"];
+// 각 면 촬영 시 카메라 상단 방향을 명확히 지정해야 3D 변환이 정확해짐
 const FACE_GUIDE = {
-  U: "하양(흰색) 면을 위로 향하게 잡아요",
-  R: "빨강 면이 정면으로 오도록 잡아요",
-  F: "초록 면이 정면으로 오도록 잡아요",
-  D: "노랑 면이 정면으로 오도록 잡아요",
-  L: "주황 면이 정면으로 오도록 잡아요",
-  B: "파랑 면이 정면으로 오도록 잡아요",
+  U: "하양 면이 카메라로 — 파란(뒤)면이 위로 오게 잡아요",
+  R: "빨강 면이 카메라로 — 하양(위)면이 위로 오게 잡아요",
+  F: "초록 면이 카메라로 — 하양(위)면이 위로 오게 잡아요",
+  D: "노랑 면이 카메라로 — 초록(앞)면이 위로 오게 잡아요",
+  L: "주황 면이 카메라로 — 하양(위)면이 위로 오게 잡아요",
+  B: "파란 면이 카메라로 — 하양(위)면이 위로 오게 잡아요",
 };
 
 function nearestFace(r, g, b) {
@@ -299,7 +301,15 @@ export function createScanner({ onJumpToStep } = {}) {
       validationEl.innerHTML = "";
       const result = validateCubeState(faceCopy);
       if (result.valid) {
-        validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 유효한 큐브 상태예요!" }));
+        // L3: 조각 유효성 검사 (3D 변환 가능 여부)
+        const patternData = facesToKPatternData(faceCopy);
+        if (!patternData) {
+          validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 색상 수는 맞아요!" }));
+          validationEl.appendChild(el("div", { class: "scan-error-item",
+            text: "⚠️ 중복 조각이 감지됐어요. 잘못 인식된 스티커를 탭해서 수정하면 3D 가이드를 쓸 수 있어요." }));
+        } else {
+          validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 유효한 큐브 상태 — 3D 가이드 사용 가능!" }));
+        }
         proceedBtn.disabled = false;
         proceedBtn.style.opacity = "1";
       } else {

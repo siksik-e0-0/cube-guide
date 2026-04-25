@@ -80,11 +80,24 @@ export function createPersonalGuide({ faces, startStep, onJumpToStep }) {
     hdr.appendChild(el("button", { class: "pg-close", type: "button", text: "✕", onClick: () => close() }));
     modal.appendChild(hdr);
 
-    // 단계 제목
-    modal.appendChild(el("h2", { class: "pg-title", text: data.title }));
+    // 단계 제목 + 3D 상태 배지
+    const titleRow = el("div", { class: "pg-title-row" });
+    titleRow.appendChild(el("h2", { class: "pg-title", text: data.title }));
+    const isMyState = step === startStep && !!scrambleAlg;
+    titleRow.appendChild(el("span", {
+      class: isMyState ? "pg-badge pg-badge-my" : "pg-badge pg-badge-std",
+      text: isMyState ? "내 큐브 3D" : "표준 3D",
+      title: isMyState ? "실제 큐브 상태를 표시합니다" : "3D 변환에 실패해 표준 상태를 표시합니다. 스캔 화면에서 스티커를 수정해주세요.",
+    }));
+    modal.appendChild(titleRow);
+
+    if (step === startStep && !scrambleAlg) {
+      modal.appendChild(el("div", { class: "pg-convert-warn",
+        text: "⚠️ 큐브 3D 변환에 실패했어요. 잘못 인식된 스티커가 있을 수 있어요." }));
+    }
 
     // twisty-player: 첫 단계는 사용자 실제 큐브 (scrambleAlg), 이후는 표준 setupAlg
-    const setup = step === startStep && scrambleAlg ? scrambleAlg : (data.setupAlg || "");
+    const setup = isMyState ? scrambleAlg : (data.setupAlg || "");
     const alg   = guide?.algorithm || data.algorithm || data.demoAlg || "";
     const wrap = el("div", { class: "pg-player-wrap" });
     wrap.appendChild(el("div", { class: "pg-player-loading", text: "큐브 준비 중..." }));
