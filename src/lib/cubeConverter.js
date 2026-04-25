@@ -65,7 +65,68 @@ const EDGE_SLOTS = [
   [["B",5],["L",3]], // slot 11: BL
 ];
 
-// faces → KPatternData 변환. 유효하지 않은 faces이면 null 반환.
+// ── 면 회전 유틸 ────────────────────────────────────────────────────────────
+
+// 3×3 면 배열을 90° 시계방향으로 회전
+function rotateFace90CW(arr) {
+  return [
+    arr[6], arr[3], arr[0],
+    arr[7], arr[4], arr[1],
+    arr[8], arr[5], arr[2],
+  ];
+}
+
+function rotateFaceN(arr, n) {
+  let r = [...arr];
+  for (let i = 0; i < (n % 4); i++) r = rotateFace90CW(r);
+  return r;
+}
+
+// ── 풀이 가능 여부 검사 ─────────────────────────────────────────────────────
+
+function permutationParity(perm) {
+  const visited = new Array(perm.length).fill(false);
+  let parity = 0;
+  for (let i = 0; i < perm.length; i++) {
+    if (!visited[i]) {
+      let len = 0, j = i;
+      while (!visited[j]) { visited[j] = true; j = perm[j]; len++; }
+      if (len % 2 === 0) parity ^= 1;
+    }
+  }
+  return parity;
+}
+
+// 큐브 상태 풀이 가능 조건:
+// 1) 엣지 방향 합 % 2 === 0
+// 2) 코너 방향 합 % 3 === 0
+// 3) 코너 치환 홀짝 === 엣지 치환 홀짝
+function isSolvable(pd) {
+  const eSum = pd.EDGES.orientation.reduce((a, b) => a + b, 0);
+  if (eSum % 2 !== 0) return false;
+  const cSum = pd.CORNERS.orientation.reduce((a, b) => a + b, 0);
+  if (cSum % 3 !== 0) return false;
+  return permutationParity(pd.CORNERS.pieces) === permutationParity(pd.EDGES.pieces);
+}
+
+// U/D 면 촬영 방향이 가정과 다를 수 있으므로 4×4=16 가지 회전 조합을 시도해
+// 풀이 가능한 KPatternData를 반환. 찾지 못하면 null.
+export function findSolvableKPatternData(faces) {
+  for (let uRot = 0; uRot < 4; uRot++) {
+    for (let dRot = 0; dRot < 4; dRot++) {
+      const testFaces = {
+        ...faces,
+        U: rotateFaceN(faces.U, uRot),
+        D: rotateFaceN(faces.D, dRot),
+      };
+      const pd = facesToKPatternData(testFaces);
+      if (pd && isSolvable(pd)) return pd;
+    }
+  }
+  return null;
+}
+
+// ── faces → KPatternData 변환. 유효하지 않은 faces이면 null 반환. ──────────
 export function facesToKPatternData(faces) {
   const cPieces = [], cOrient = [];
   for (const [[f0,i0],[f1,i1],[f2,i2]] of CORNER_SLOTS) {
@@ -92,7 +153,8 @@ export function facesToKPatternData(faces) {
 
 // faces → 스크램블 알고리즘 문자열. cubing/search를 사용해 현재 상태 → 솔루션을 찾고 역산.
 export async function getScrambleAlg(faces) {
-  const patternData = facesToKPatternData(faces);
+  // 16가지 U/D 회전 조합 중 풀이 가능한 상태를 자동으로 선택
+  const patternData = findSolvableKPatternData(faces);
   if (!patternData) return null;
   try {
     const { cube3x3x3 } = await import("cubing/puzzles");
