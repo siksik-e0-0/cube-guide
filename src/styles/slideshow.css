@@ -120,7 +120,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-2) var(--space-4);
   border-top: 1px solid var(--c-border);
   background: #fff;
   gap: var(--space-3);
@@ -128,13 +128,13 @@
 .ss-bottom .ss-counter {
   font-weight: 700;
   color: var(--c-text-soft);
-  font-size: 18px;
+  font-size: 15px;
 }
 .ss-nav-btn {
-  min-height: var(--btn-h-lg);
-  min-width: 140px;
-  font-size: 22px;
-  padding: 14px 32px;
+  min-height: 48px;
+  min-width: 110px;
+  font-size: 17px;
+  padding: 8px 22px;
   border-radius: 999px;
   font-weight: 700;
   border: 2px solid transparent;
@@ -155,7 +155,7 @@
 /* Tiny screens — stack */
 @media (max-width: 520px) {
   .ss-slide { padding: var(--space-4); }
-  .ss-nav-btn { min-width: 100px; font-size: 18px; padding: 10px 18px; }
+  .ss-nav-btn { min-width: 80px; font-size: 15px; padding: 6px 14px; }
   .ss-top { padding: var(--space-2) var(--space-3); }
-  .ss-bottom { padding: var(--space-3); }
+  .ss-bottom { padding: var(--space-2) var(--space-3); }
 }
