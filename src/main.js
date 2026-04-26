@@ -49,6 +49,9 @@ function init() {
 
   wireTtsToggle();
   loadCubing();
+
+  const verEl = qs("#app-version");
+  if (verEl) verEl.textContent = `빌드 ${__BUILD_HASH__} · ${__BUILD_TIME__}`;
 }
 
 if (document.readyState === "loading") {
