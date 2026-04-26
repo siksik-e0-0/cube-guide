@@ -216,11 +216,12 @@ export function facesToKPatternData(faces) {
 }
 
 // faces → 스크램블 알고리즘 문자열. cubing/search를 사용해 현재 상태 → 솔루션을 찾고 역산.
+// 모바일 WASM 초기화 지연에 대비해 최대 2회 재시도.
 export async function getScrambleAlg(faces) {
-  // 16가지 U/D 회전 조합 중 풀이 가능한 상태를 자동으로 선택
   const patternData = findSolvableKPatternData(faces);
   if (!patternData) return null;
-  try {
+
+  const attempt = async () => {
     const { cube3x3x3 } = await import("cubing/puzzles");
     const { KPattern } = await import("cubing/kpuzzle");
     const { experimentalSolve3x3x3IgnoringCenters } = await import("cubing/search");
@@ -228,8 +229,16 @@ export async function getScrambleAlg(faces) {
     const kpattern = new KPattern(kpuzzle, patternData);
     const solution = await experimentalSolve3x3x3IgnoringCenters(kpattern);
     return solution.invert().toString();
-  } catch (err) {
-    console.error("[cubeConverter] getScrambleAlg 실패:", err);
-    return null;
+  };
+
+  for (let i = 0; i < 3; i++) {
+    try {
+      return await attempt();
+    } catch (err) {
+      if (i === 2) console.error("[cubeConverter] getScrambleAlg 실패 (3회):", err);
+      // WASM 초기화 지연 대비: 재시도 전 잠시 대기
+      await new Promise(r => setTimeout(r, 800 * (i + 1)));
+    }
   }
+  return null;
 }

@@ -16,6 +16,8 @@ async function loadCubing() {
   import("cubing/twisty").catch((err) => {
     console.error("cubing/twisty 로드 실패", err);
   });
+  // cubing/search WASM 솔버를 미리 로드 — 스캔 후 3D 변환 시 초기화 지연 방지
+  import("cubing/search").catch(() => {});
 }
 
 function init() {
