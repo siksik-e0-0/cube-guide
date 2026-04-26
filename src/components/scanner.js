@@ -30,11 +30,12 @@ function sampleFaceColors(video, canvas) {
   canvas.height = video.videoHeight || 480;
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  // 0.56: 0.62에서 축소 — 측면 촬영 시 하단 행(index 6-8)이 D면 영역으로 넘어가는 오인식 방지
+  // 그리드를 위로 시프트: 하단 행이 D면·손 영역을 샘플링하는 오인식 방지.
+  // CSS 오버레이 top: 44% 와 동일 비율로 맞춤.
   const size = Math.min(canvas.width, canvas.height) * 0.56;
   const startX = (canvas.width - size) / 2;
-  const startY = (canvas.height - size) / 2;
   const cell = size / 3;
+  const startY = (canvas.height - size) / 2 - cell * 0.4; // 셀 높이 40% 위로 시프트 (하단 행 D면 오인식 방지)
   // 셀 중앙 15% 반경을 블록 평균으로 샘플링 → 노이즈·가장자리 효과 감소
   const r = Math.max(2, Math.round(cell * 0.15));
 
