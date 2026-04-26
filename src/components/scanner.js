@@ -1,22 +1,10 @@
 import { el } from "../util/dom.js";
-import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER } from "../lib/cubeState.js";
+import { validateCubeState, getFaceHex, getFaceKo, FACE_ORDER, FACE_RGB } from "../lib/cubeState.js";
 import { getStepStateText } from "../lib/lblAnalyzer.js";
 import { generateStepGuide } from "../lib/lblGuide.js";
 import { createPersonalGuide } from "./personalGuide.js";
 import { findSolvableKPatternData, findInvalidStickers } from "../lib/cubeConverter.js";
 
-// WCA 표준 색 배치 기준 RGB 참조값
-const COLOR_REF = {
-  U: { rgb: [255, 255, 255], ko: "하양", hex: "#FFFFFF" },
-  D: { rgb: [255, 210, 0],   ko: "노랑", hex: "#FFD200" },
-  R: { rgb: [185, 0, 0],     ko: "빨강", hex: "#B90000" },
-  L: { rgb: [255, 89, 0],    ko: "주황", hex: "#FF5900" },
-  F: { rgb: [0, 155, 72],    ko: "초록", hex: "#009B48" },
-  B: { rgb: [0, 70, 173],    ko: "파랑", hex: "#0046AD" },
-};
-
-// 스캔 순서: U → R → F → D → L → B (WCA 표준)
-const FACE_ORDER = ["U", "R", "F", "D", "L", "B"];
 // 각 면 촬영 시 카메라 상단 방향을 명확히 지정해야 3D 변환이 정확해짐
 const FACE_GUIDE = {
   U: "하양 면이 카메라로 — 파란(뒤)면이 위로 오게 잡아요",
@@ -29,7 +17,7 @@ const FACE_GUIDE = {
 
 function nearestFace(r, g, b) {
   let best = "U", bestDist = Infinity;
-  for (const [face, { rgb }] of Object.entries(COLOR_REF)) {
+  for (const [face, rgb] of Object.entries(FACE_RGB)) {
     const d = (r - rgb[0]) ** 2 + (g - rgb[1]) ** 2 + (b - rgb[2]) ** 2;
     if (d < bestDist) { bestDist = d; best = face; }
   }
@@ -120,18 +108,17 @@ function colorGrid(face9, { editable = false, onChange } = {}) {
   face9.forEach((f, idx) => {
     const cell = el("div", {
       class: "scan-cell",
-      style: `background:${COLOR_REF[f].hex}`,
-      title: COLOR_REF[f].ko,
+      style: `background:${getFaceHex(f)}`,
+      title: getFaceKo(f),
     });
     if (editable) {
       cell.style.cursor = "pointer";
       cell.addEventListener("click", () => {
-        const faceKeys = Object.keys(COLOR_REF);
         // face9[idx]로 현재값 읽기 — f는 초기값만 캡처되므로 클릭마다 face9[idx] 사용해야 순환됨
-        const next = faceKeys[(faceKeys.indexOf(face9[idx]) + 1) % faceKeys.length];
+        const next = FACE_ORDER[(FACE_ORDER.indexOf(face9[idx]) + 1) % FACE_ORDER.length];
         face9[idx] = next;
-        cell.style.background = COLOR_REF[next].hex;
-        cell.title = COLOR_REF[next].ko;
+        cell.style.background = getFaceHex(next);
+        cell.title = getFaceKo(next);
         onChange?.(face9);
       });
     }
@@ -265,7 +252,6 @@ export function createScanner({ onJumpToStep } = {}) {
 
     // 십자 레이아웃 (U / L F R B / D)
     const cross = el("div", { class: "scanner-cross" });
-    const faceKeys = Object.keys(getFaceHex.__map__ || {});
 
     // 셀 DOM 참조 저장: cellMap["U.3"] = cellElement
     const cellMap = {};
@@ -282,7 +268,7 @@ export function createScanner({ onJumpToStep } = {}) {
         cell.style.cursor = "pointer";
         cellMap[`${face}.${idx}`] = cell;
         cell.addEventListener("click", () => {
-          const allFaces = CUBE_FACE_ORDER;
+          const allFaces = FACE_ORDER;
           const next = allFaces[(allFaces.indexOf(faceCopy[face][idx]) + 1) % allFaces.length];
           faceCopy[face][idx] = next;
           cell.style.background = getFaceHex(next);
@@ -297,7 +283,7 @@ export function createScanner({ onJumpToStep } = {}) {
       return wrap;
     }
 
-    for (const face of CUBE_FACE_ORDER) {
+    for (const face of FACE_ORDER) {
       cross.appendChild(makeFaceGrid(face));
     }
 
@@ -388,24 +374,38 @@ export function createScanner({ onJumpToStep } = {}) {
 
     const msg = el("div", { class: "scan-result-msg" });
     if (stage === 0) {
-      msg.innerHTML = "<div class='big'>🎉 큐브가 이미 완성됐어요!</div>";
+      msg.appendChild(el("div", { class: "big", text: "🎉 큐브가 이미 완성됐어요!" }));
     } else {
       const stateText = getStepStateText(stage, capturedFaces);
       const guide = generateStepGuide(stage, capturedFaces);
-      const guideRows = guide && !guide.done ? [
-        guide.orient  ? `<div class='scan-guide-row'><span class='scan-guide-label'>잡는 방법</span>${guide.orient}</div>` : "",
-        guide.algorithm ? `<div class='scan-guide-row'><span class='scan-guide-label'>알고리즘</span><code class='scan-guide-alg'>${guide.algorithm}</code></div>` : "",
-        guide.note    ? `<div class='scan-guide-note'>${guide.note}</div>` : "",
-      ].filter(Boolean).join("") : "";
 
-      msg.innerHTML = `
-        <div class='scan-result-title'>스캔 완료!</div>
-        <div class='scan-result-step'>
-          <span class='big-num'>${stage}</span>단계부터 시작하면 돼요.
-        </div>
-        ${stateText ? `<div class='scan-state-hint'>${stateText}</div>` : ""}
-        ${guideRows ? `<div class='scan-guide-block'>${guideRows}</div>` : ""}
-      `;
+      msg.appendChild(el("div", { class: "scan-result-title", text: "스캔 완료!" }));
+      msg.appendChild(el("div", { class: "scan-result-step" }, [
+        el("span", { class: "big-num", text: String(stage) }),
+        el("span", { text: "단계부터 시작하면 돼요." }),
+      ]));
+      if (stateText) {
+        msg.appendChild(el("div", { class: "scan-state-hint", text: stateText }));
+      }
+      if (guide && !guide.done) {
+        const block = el("div", { class: "scan-guide-block" });
+        if (guide.orient) {
+          block.appendChild(el("div", { class: "scan-guide-row" }, [
+            el("span", { class: "scan-guide-label", text: "잡는 방법" }),
+            el("span", { text: guide.orient }),
+          ]));
+        }
+        if (guide.algorithm) {
+          block.appendChild(el("div", { class: "scan-guide-row" }, [
+            el("span", { class: "scan-guide-label", text: "알고리즘" }),
+            el("code", { class: "scan-guide-alg", text: guide.algorithm }),
+          ]));
+        }
+        if (guide.note) {
+          block.appendChild(el("div", { class: "scan-guide-note", text: guide.note }));
+        }
+        msg.appendChild(block);
+      }
       // 3D 개인 가이드
       const guideBtn = el("button", {
         class: "btn btn-primary btn-lg",

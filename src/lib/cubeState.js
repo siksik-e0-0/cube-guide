@@ -7,6 +7,16 @@ const FACE_HEX = {
   B: "#0046AD",
 };
 
+// nearestFace() 색상 분류용 WCA 표준 RGB 참조값 (scanner.js에서 import)
+export const FACE_RGB = {
+  U: [255, 255, 255],
+  D: [255, 210, 0],
+  R: [185, 0, 0],
+  L: [255, 89, 0],
+  F: [0, 155, 72],
+  B: [0, 70, 173],
+};
+
 const FACE_KO = {
   U: "하양", D: "노랑", R: "빨강", L: "주황", F: "초록", B: "파랑",
 };
