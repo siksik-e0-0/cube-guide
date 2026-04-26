@@ -92,39 +92,87 @@ function completeRow(data, { onComplete } = {}) {
   return row;
 }
 
+function caseBlock(c) {
+  const wrap = el("div", { class: "case-block" });
+  wrap.appendChild(el("div", { class: "case-label", text: c.label }));
+
+  const playerWrap = el("div", { class: "case-player-wrap" });
+  playerWrap.appendChild(el("div", { class: "player-loading case-loading", text: "..." }));
+  const attrs = {
+    puzzle: "3x3x3",
+    "control-panel": "bottom-row",
+    "hint-facelets": "none",
+    "tempo-scale": "0.5",
+    background: "none",
+    visualization: "3D",
+    alg: c.algorithm || "",
+  };
+  if (c.setupAlg) attrs["experimental-setup-alg"] = c.setupAlg;
+  const player = el("twisty-player", attrs);
+  playerWrap.appendChild(player);
+  wrap.appendChild(playerWrap);
+
+  // 재생 버튼
+  const playBtn = el("button", {
+    class: "btn btn-yellow case-play-btn",
+    type: "button",
+    text: "▶",
+    title: "돌려보기",
+    onClick: () => {
+      customElements.whenDefined("twisty-player").then(() => {
+        try { player.timestamp = 0; player.play(); } catch {}
+      });
+    },
+  });
+  wrap.appendChild(playBtn);
+
+  if (c.algorithm) {
+    wrap.appendChild(
+      renderMoveSequence(c.algorithm, { label: c.label }).element,
+    );
+  }
+  return wrap;
+}
+
 export function renderStepSlide(data, { onComplete } = {}) {
   const grid = el("div", { class: "slide-grid", "data-step-id": data.id });
 
   // LEFT: cube + player controls + move sequence
   const left = el("div", { class: "slide-left" });
   const hasAlg = !!(data.algorithm || data.demoAlg);
-  const { wrap, player } = playerBlock(data);
-  left.appendChild(wrap);
-  if (hasAlg) {
-    left.appendChild(playerControls(player));
-  } else {
-    // 알고리즘 없는 단계 — 직접 연습 안내
-    left.appendChild(
-      el("div", {
-        class: "no-alg-hint",
-        text: "이 단계는 정해진 주문이 없어요. 직접 하얀 모서리를 위로 올려봐요! 🤲",
-      }),
-    );
+  const hasCases = Array.isArray(data.cases) && data.cases.length > 0;
+
+  // 메인 플레이어: cases만 있고 algorithm/demoAlg 없으면 생략
+  if (hasAlg || !hasCases) {
+    const { wrap, player } = playerBlock(data);
+    left.appendChild(wrap);
+    if (hasAlg) {
+      left.appendChild(playerControls(player));
+    } else {
+      left.appendChild(
+        el("div", {
+          class: "no-alg-hint",
+          text: "이 단계는 정해진 주문이 없어요. 직접 하얀 모서리를 위로 올려봐요! 🤲",
+        }),
+      );
+    }
+    if (data.algorithm) {
+      left.appendChild(
+        renderMoveSequence(data.algorithm, { label: "같이 해봐요 — 하나씩 눌러요" }).element,
+      );
+    }
+    if (data.altAlgorithm) {
+      left.appendChild(
+        renderMoveSequence(data.altAlgorithm, { label: data.altLabel || "다른 방향일 때" }).element,
+      );
+    }
   }
 
-  if (data.algorithm) {
-    left.appendChild(
-      renderMoveSequence(data.algorithm, {
-        label: "같이 해봐요 — 하나씩 눌러요",
-      }).element,
-    );
-  }
-  if (data.altAlgorithm) {
-    left.appendChild(
-      renderMoveSequence(data.altAlgorithm, {
-        label: data.altLabel || "다른 방향일 때",
-      }).element,
-    );
+  // 케이스별 3D 큐브 (cases 배열)
+  if (hasCases) {
+    const casesSection = el("div", { class: "cases-section" });
+    data.cases.forEach(c => casesSection.appendChild(caseBlock(c)));
+    left.appendChild(casesSection);
   }
 
   // RIGHT: title + mascot + orientation + tips + checkpoint + video + complete

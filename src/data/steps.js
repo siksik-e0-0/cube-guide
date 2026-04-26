@@ -58,8 +58,27 @@ export const MAIN_STEPS = [
     displayRotation: "x2",
     algorithm: "",
     demoAlg: "R' F'",
-    // inv(R' F') = F R
     setupAlg: "F R",
+    // 상황별 3D 큐브: 세 가지 위치에서 각각 다른 동작
+    cases: [
+      {
+        label: "상황① 위층에 있을 때",
+        algorithm: "R' F'",
+        setupAlg: "F R",
+      },
+      {
+        label: "상황② 가운데층에 있을 때",
+        algorithm: "F' R",
+        // inv(F' R) = R' F
+        setupAlg: "R' F",
+      },
+      {
+        label: "상황③ 아래층에 있을 때",
+        algorithm: "R F' R2",
+        // inv(R F' R2) = R2 F R'
+        setupAlg: "R2 F R'",
+      },
+    ],
     tips: [
       "풀이 내내 하얀 면이 아래를 향하게 잡아요.",
       "상황①: 하얀 모서리가 위층에 있을 때 — R', F' 순서로 돌려요.",
@@ -104,6 +123,26 @@ export const MAIN_STEPS = [
     altLabel: "왼쪽 공식 (하얀면이 왼손 쪽일 때)",
     // inv(R U R' U') = U R U' R'
     setupAlg: "U R U' R'",
+    // 상황별 3D 큐브: 꼭짓점 방향 3가지
+    cases: [
+      {
+        label: "상황① 하얀면 자신쪽 + 왼손 쪽",
+        algorithm: "L' U' L U",
+        // inv(L' U' L U) = U' L' U L
+        setupAlg: "U' L' U L",
+      },
+      {
+        label: "상황② 하얀면 자신쪽 + 오른손 쪽",
+        algorithm: "R U R' U'",
+        setupAlg: "U R U' R'",
+      },
+      {
+        label: "상황③ 하얀면이 위를 향할 때 (×3)",
+        algorithm: "R U R' U' R U R' U' R U R' U'",
+        // inv = (U R U' R') ×3
+        setupAlg: "U R U' R' U R U' R' U R U' R'",
+      },
+    ],
     tips: [
       "위층에서 노란색이 없는 꼭짓점을 찾아요.",
       "U/U'/U2로 그 꼭짓점을 넣을 자리 바로 위에 맞춰요.",
@@ -126,8 +165,21 @@ export const MAIN_STEPS = [
     algorithm: "U R U' R' U' F' U F",
     altAlgorithm: "U' L' U L U F U' F'",
     altLabel: "왼쪽으로 넣을 때",
-    // inv(U R U' R' U' F' U F) = F' U' F U R U' R' U'... 실제 역순
     setupAlg: "F' U' F U R U' R' U",
+    // 상황별 3D 큐브: 오른쪽·왼쪽 삽입
+    cases: [
+      {
+        label: "상황① 오른쪽으로 넣을 때",
+        algorithm: "U R U' R' U' F' U F",
+        setupAlg: "F' U' F U R U' R' U",
+      },
+      {
+        label: "상황② 왼쪽으로 넣을 때",
+        algorithm: "U' L' U L U F U' F'",
+        // inv(U' L' U L U F U' F') = F U' F' U' L' U L U
+        setupAlg: "F U' F' U' L' U L U",
+      },
+    ],
     tips: [
       "위층에서 노란색이 없는 모서리를 찾아요.",
       "모서리의 앞면 색과 가운데 조각 색을 맞춰요.",
@@ -169,8 +221,22 @@ export const MAIN_STEPS = [
     orientation: "노란 면을 아래로 뒤집어요. 한 면이 자신을 향하게.",
     displayRotation: "",
     algorithm: "R' D' R D",
-    // inv(R' D' R D) = D' R' D R
     setupAlg: "D' R' D R",
+    // 상황별 3D 큐브: 노란 스티커 위치에 따라 반복 횟수 다름
+    cases: [
+      {
+        label: "상황① 노란면이 앞면에 있을 때 (×2)",
+        algorithm: "R' D' R D R' D' R D",
+        // inv = (D' R' D R) ×2
+        setupAlg: "D' R' D R D' R' D R",
+      },
+      {
+        label: "상황② 노란면이 옆면에 있을 때 (×4)",
+        algorithm: "R' D' R D R' D' R D R' D' R D R' D' R D",
+        // inv = (D' R' D R) ×4
+        setupAlg: "D' R' D R D' R' D R D' R' D R D' R' D R",
+      },
+    ],
     tips: [
       "노란면을 아래로 뒤집어 잡아요.",
       "상황①: 노란 스티커가 앞면에 있으면 → 공식 2번 (Right ×2)",
