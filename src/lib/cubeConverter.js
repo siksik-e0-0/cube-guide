@@ -215,12 +215,66 @@ export function facesToKPatternData(faces) {
   };
 }
 
-// faces → 스크램블 알고리즘 문자열. cubing/search를 사용해 현재 상태 → 솔루션을 찾고 역산.
-// 모바일 WASM 초기화 지연에 대비해 최대 3회 재시도. 에러 메시지를 반환에 포함.
+// ── 순수 JS 빠른 스크램블 추출 ─────────────────────────────────────────────
+// WASM 솔버 없이 patternData에서 직접 스크램블 알고리즘을 반환.
+// F2L(앞 두 층)이 완성된 상태에서 D층만 변형된 경우를 처리.
+
+const arrEq = (a, b) => a.every((v, i) => v === b[i]);
+
+// D면 회전 상태별 코너/엣지 치환 패턴 (베이스 = 완성 큐브)
+// 코너 홈: [DFR=4, DLF=5, DBL=6, DRB=7], 엣지 홈: [DF=4, DR=5, DB=6, DL=7]
+const D_PATTERNS = [
+  { alg: "",    dc: [4,5,6,7], de: [4,5,6,7] }, // solved
+  { alg: "D",   dc: [5,6,7,4], de: [7,4,5,6] }, // D CW
+  { alg: "D'",  dc: [7,4,5,6], de: [5,6,7,4] }, // D CCW
+  { alg: "D2",  dc: [6,7,4,5], de: [6,7,4,5] }, // D 180°
+];
+
+// U면 회전 오프셋 (AUF) — 코너: [UFR=0,UBR=1,UBL=2,UFL=3], 엣지: [UF=0,UR=1,UB=2,UL=3]
+const U_PATTERNS = [
+  { alg: "",   uc: [0,1,2,3], ue: [0,1,2,3] },
+  { alg: "U",  uc: [3,0,1,2], ue: [3,0,1,2] },
+  { alg: "U'", uc: [1,2,3,0], ue: [1,2,3,0] },
+  { alg: "U2", uc: [2,3,0,1], ue: [2,3,0,1] },
+];
+
+function quickScramble(pd) {
+  const c = pd.CORNERS, e = pd.EDGES;
+  // 코너·엣지 방향이 모두 0이어야 함 (비틀림·뒤집힘 없음)
+  if (c.orientation.some(o => o !== 0)) return null;
+  if (e.orientation.some(o => o !== 0)) return null;
+  // 가운데층 엣지가 홈에 있어야 함
+  if (!arrEq(e.pieces.slice(8), [8,9,10,11])) return null;
+
+  const uc = c.pieces.slice(0, 4);
+  const ue = e.pieces.slice(0, 4);
+  const dc = c.pieces.slice(4);
+  const de = e.pieces.slice(4, 8);
+
+  for (const up of U_PATTERNS) {
+    if (!arrEq(uc, up.uc) || !arrEq(ue, up.ue)) continue;
+    for (const dp of D_PATTERNS) {
+      if (arrEq(dc, dp.dc) && arrEq(de, dp.de)) {
+        // U + D 조합 알고리즘 반환
+        return [up.alg, dp.alg].filter(Boolean).join(" ") || "";
+      }
+    }
+  }
+  return null; // 단순 U/D 회전이 아닌 복잡한 상태
+}
+
+// faces → 스크램블 알고리즘 문자열.
+// 1) 순수 JS 빠른 솔버 (D/U 회전 조합) — WASM 불필요
+// 2) cubing/search Kociemba 솔버 (복잡한 상태) — 모바일에서 실패 가능
 export async function getScrambleAlg(faces) {
   const patternData = findSolvableKPatternData(faces);
   if (!patternData) return null;
 
+  // 1단계: WASM 없이 즉시 해결 가능한 경우 처리
+  const quick = quickScramble(patternData);
+  if (quick !== null) return quick;
+
+  // 2단계: Kociemba WASM 솔버 (3회 재시도)
   let lastErr = null;
   for (let i = 0; i < 3; i++) {
     try {
@@ -228,7 +282,6 @@ export async function getScrambleAlg(faces) {
       const { KPattern } = await import("cubing/kpuzzle");
       const { experimentalSolve3x3x3IgnoringCenters } = await import("cubing/search");
       const kpuzzle = await cube3x3x3.kpuzzle();
-      // 워밍업: identity 패턴으로 WASM 초기화 보장
       if (i === 0) {
         try { await experimentalSolve3x3x3IgnoringCenters(kpuzzle.defaultPattern()); } catch {}
       }
@@ -237,7 +290,7 @@ export async function getScrambleAlg(faces) {
       return solution.invert().toString();
     } catch (err) {
       lastErr = err;
-      console.error(`[cubeConverter] getScrambleAlg 시도 ${i + 1} 실패:`, err?.message ?? err);
+      console.error(`[cubeConverter] Kociemba 시도 ${i + 1} 실패:`, err?.message ?? err);
       if (i < 2) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
     }
   }
