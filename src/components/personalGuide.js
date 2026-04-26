@@ -3,21 +3,34 @@ import { MAIN_STEPS } from "../data/steps.js";
 import { generateStepGuide } from "../lib/lblGuide.js";
 import { getStepStateText } from "../lib/lblAnalyzer.js";
 import { getScrambleAlg } from "../lib/cubeConverter.js";
-import { getFaceHex, getFaceKo, FACE_ORDER as CUBE_FACE_ORDER } from "../lib/cubeState.js";
+import { getFaceHex, getFaceKo, FACE_ORDER } from "../lib/cubeState.js";
 
 // 스캔 faces 데이터를 2D 십자 레이아웃으로 렌더링 (3D 변환 실패 시 대체 표시)
-function buildFaceCross(faces) {
+// editable=true 시 셀 탭으로 색상 순환 수정 가능
+function buildFaceCross(faces, { editable = false, onChange } = {}) {
   const cross = el("div", { class: "pg-face-cross" });
   const order = ["U", "L", "F", "R", "B", "D"];
   for (const face of order) {
     const wrap = el("div", { class: `pg-cross-face pg-cross-${face.toLowerCase()}` });
     const grid = el("div", { class: "pg-cross-grid" });
-    (faces[face] || []).forEach(code => {
-      grid.appendChild(el("div", {
+    (faces[face] || []).forEach((code, idx) => {
+      const cell = el("div", {
         class: "pg-cross-cell",
         style: `background:${getFaceHex(code)}`,
         title: getFaceKo(code),
-      }));
+      });
+      if (editable) {
+        cell.style.cursor = "pointer";
+        cell.addEventListener("click", () => {
+          // faces[face][idx]로 현재값 읽기 — 초기값만 캡처된 code 대신 최신값 사용
+          const next = FACE_ORDER[(FACE_ORDER.indexOf(faces[face][idx]) + 1) % FACE_ORDER.length];
+          faces[face][idx] = next;
+          cell.style.background = getFaceHex(next);
+          cell.title = getFaceKo(next);
+          onChange?.();
+        });
+      }
+      grid.appendChild(cell);
     });
     wrap.appendChild(grid);
     wrap.appendChild(el("div", { class: "pg-cross-label", text: face }));
@@ -113,11 +126,39 @@ export function createPersonalGuide({ faces, startStep, onJumpToStep }) {
     }));
     modal.appendChild(titleRow);
 
-    // 첫 단계 & 변환 실패 → 스캔한 면 2D 그리드 표시 (잘못된 3D 대신)
+    // 첫 단계 & 변환 실패 → 편집 가능한 2D 그리드 + 다시 3D 생성 버튼
     if (step === startStep && !scrambleAlg) {
-      modal.appendChild(el("div", { class: "pg-convert-warn",
-        text: "⚠️ 3D 변환 실패 — 스캔 이미지로 대신 표시해요. 알고리즘 안내는 정확합니다." }));
-      modal.appendChild(buildFaceCross(faces));
+      const warnEl = el("div", { class: "pg-convert-warn",
+        text: "⚠️ 3D 변환 실패 — 아래 색상을 실제 큐브와 맞게 수정하고 다시 시도해보세요." });
+      modal.appendChild(warnEl);
+
+      // 편집용 독립 복사본 (faces를 직접 변경하지 않음)
+      const editFaces = {};
+      for (const f of FACE_ORDER) editFaces[f] = [...(faces[f] || Array(9).fill(f))];
+
+      modal.appendChild(buildFaceCross(editFaces, { editable: true }));
+
+      const retryBtn = el("button", {
+        class: "btn btn-primary pg-retry",
+        type: "button",
+        text: "🔄 다시 3D 생성",
+        onClick: async () => {
+          retryBtn.disabled = true;
+          retryBtn.textContent = "분석 중...";
+          const alg = await getScrambleAlg(editFaces);
+          if (alg) {
+            // 성공: faces 업데이트 → scrambleAlg 갱신 → renderStep 재호출
+            for (const f of FACE_ORDER) faces[f] = [...editFaces[f]];
+            scrambleAlg = alg;
+            renderStep(step);
+          } else {
+            retryBtn.disabled = false;
+            retryBtn.textContent = "🔄 다시 3D 생성";
+            warnEl.textContent = "⚠️ 여전히 3D 변환 실패 — 잘못된 스티커를 더 수정해보세요.";
+          }
+        },
+      });
+      modal.appendChild(retryBtn);
     }
 
     // twisty-player: 첫 단계 & 변환 성공 = 실제 큐브, 나머지 = 표준 setupAlg

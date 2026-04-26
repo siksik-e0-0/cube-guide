@@ -320,23 +320,23 @@ export function createScanner({ onJumpToStep } = {}) {
             validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 조각 색상은 정상이에요!" }));
             validationEl.appendChild(el("div", { class: "scan-error-item",
               text: "⚠️ 3D 변환 실패 — 촬영 방향 문제일 수 있어요. R/F/L/B 면은 반드시 하얀(U)면이 화면 위쪽에 오도록 잡고 다시 촬영해보세요." }));
-            // 디버그: face 데이터 복사 버튼 (개발 진단용)
-            const dbgBtn = el("button", {
-              class: "btn btn-ghost",
-              type: "button",
-              text: "📋 진단 데이터 복사",
-              onClick: () => {
-                const json = JSON.stringify(faceCopy, null, 2);
-                navigator.clipboard.writeText(json).then(
-                  () => { dbgBtn.textContent = "✅ 복사됨"; setTimeout(() => { dbgBtn.textContent = "📋 진단 데이터 복사"; }, 2000); },
-                  () => { prompt("아래 데이터를 복사하세요:", json); }
-                );
-              },
-            });
-            dbgBtn.style.fontSize = "13px";
-            dbgBtn.style.marginTop = "4px";
-            validationEl.appendChild(dbgBtn);
           }
+          // 진단 버튼: 3D 변환 실패 시 항상 표시 (bad sticker 유무 무관)
+          const dbgBtn = el("button", {
+            class: "btn btn-ghost",
+            type: "button",
+            text: "📋 진단 데이터 복사",
+            onClick: () => {
+              const json = JSON.stringify(faceCopy, null, 2);
+              navigator.clipboard.writeText(json).then(
+                () => { dbgBtn.textContent = "✅ 복사됨"; setTimeout(() => { dbgBtn.textContent = "📋 진단 데이터 복사"; }, 2000); },
+                () => { prompt("아래 데이터를 복사하세요:", json); }
+              );
+            },
+          });
+          dbgBtn.style.fontSize = "13px";
+          dbgBtn.style.marginTop = "4px";
+          validationEl.appendChild(dbgBtn);
         } else {
           validationEl.appendChild(el("div", { class: "scan-valid", text: "✅ 유효한 큐브 상태 — 3D 가이드 사용 가능!" }));
         }

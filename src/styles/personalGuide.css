@@ -174,7 +174,12 @@
   border-radius: 6px;
   overflow: hidden;
 }
-.pg-cross-cell { border-radius: 2px; }
+.pg-cross-cell { border-radius: 2px; transition: transform 0.1s, opacity 0.1s; touch-action: manipulation; }
+.pg-cross-cell[style*="cursor"]:hover  { transform: scale(1.15); }
+.pg-cross-cell[style*="cursor"]:active { transform: scale(0.88); opacity: 0.7; }
+
+/* 다시 3D 생성 버튼 */
+.pg-retry { width: 100%; }
 .pg-cross-label { font-size: 0.65rem; font-weight: 700; color: var(--c-text-soft, #888); }
 
 /* 알고리즘 전용 작은 플레이어 레이블 */
