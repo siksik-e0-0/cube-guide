@@ -135,24 +135,7 @@ export function renderStepSlide(data, { onComplete } = {}) {
   const hasAlg = !!(data.algorithm || data.demoAlg);
   const hasCases = Array.isArray(data.cases) && data.cases.length > 0;
 
-  // 메인 플레이어: cases만 있고 algorithm/demoAlg 없으면 생략
-  // player를 외부에 선언해 return 시 참조 가능하게 함
   let player = null;
-  if (hasAlg || !hasCases) {
-    const block = playerBlock(data);
-    player = block.player;
-    left.appendChild(block.wrap);
-    if (hasAlg) {
-      left.appendChild(playerControls(player));
-    } else {
-      left.appendChild(
-        el("div", {
-          class: "no-alg-hint",
-          text: "이 단계는 정해진 주문이 없어요. 직접 하얀 모서리를 위로 올려봐요! 🤲",
-        }),
-      );
-    }
-  }
 
   // 케이스별 3D 큐브 (cases 배열)
   if (hasCases) {
