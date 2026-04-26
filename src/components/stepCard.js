@@ -1,6 +1,4 @@
 import { el } from "../util/dom.js";
-import { renderMoveSequence } from "./moveSequence.js";
-import { renderVideoSlot } from "./videoSlot.js";
 import { isDone, setDone, onProgressChange } from "./progress.js";
 import { speak } from "./speech.js";
 
@@ -126,11 +124,6 @@ function caseBlock(c) {
   });
   wrap.appendChild(playBtn);
 
-  if (c.algorithm) {
-    wrap.appendChild(
-      renderMoveSequence(c.algorithm, { label: c.label }).element,
-    );
-  }
   return wrap;
 }
 
@@ -157,16 +150,6 @@ export function renderStepSlide(data, { onComplete } = {}) {
           class: "no-alg-hint",
           text: "이 단계는 정해진 주문이 없어요. 직접 하얀 모서리를 위로 올려봐요! 🤲",
         }),
-      );
-    }
-    if (data.algorithm) {
-      left.appendChild(
-        renderMoveSequence(data.algorithm, { label: "같이 해봐요 — 하나씩 눌러요" }).element,
-      );
-    }
-    if (data.altAlgorithm) {
-      left.appendChild(
-        renderMoveSequence(data.altAlgorithm, { label: data.altLabel || "다른 방향일 때" }).element,
       );
     }
   }
@@ -208,7 +191,6 @@ export function renderStepSlide(data, { onComplete } = {}) {
       ]),
     );
   }
-  right.appendChild(renderVideoSlot(data.videoYoutubeId));
   right.appendChild(completeRow(data, { onComplete }));
 
   grid.appendChild(left);
