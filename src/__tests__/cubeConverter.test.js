@@ -27,9 +27,11 @@ describe("facesToKPatternData", () => {
     expect(data.EDGES.orientation).toEqual([0,0,0,0,0,0,0,0,0,0,0,0]);
   });
 
-  it("CENTERS에 orientationMod 포함", () => {
+  it("CENTERS에 orientationMod 없음 (KPatternData 스펙 준수)", () => {
     const data = facesToKPatternData(solvedFaces());
-    expect(data.CENTERS.orientationMod).toEqual([1,1,1,1,1,1]);
+    expect(data.CENTERS.orientationMod).toBeUndefined();
+    expect(data.CENTERS.pieces).toEqual([0,1,2,3,4,5]);
+    expect(data.CENTERS.orientation).toEqual([0,0,0,0,0,0]);
   });
 
   it("알 수 없는 코너 조합이면 null 반환", () => {

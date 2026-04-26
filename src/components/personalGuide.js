@@ -245,9 +245,9 @@ export function createPersonalGuide({ faces, startStep, onJumpToStep }) {
 
       // 로딩 표시
       modal.innerHTML = "";
-      modal.appendChild(el("div", { class: "pg-loading", text: "큐브 상태 분석 중..." }));
+      modal.appendChild(el("div", { class: "pg-loading", text: "큐브 상태 분석 중... (최대 30초 소요)" }));
 
-      // 스크램블 알고리즘 계산 (솔버 비동기)
+      // 스크램블 알고리즘 계산 (솔버 비동기, 모바일 WASM 초기화에 시간이 걸릴 수 있음)
       scrambleAlg = await getScrambleAlg(faces);
 
       renderStep(currentStep);

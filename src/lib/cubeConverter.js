@@ -211,34 +211,36 @@ export function facesToKPatternData(faces) {
   return {
     EDGES:   { pieces: ePieces, orientation: eOrient },
     CORNERS: { pieces: cPieces, orientation: cOrient },
-    CENTERS: { pieces: [0,1,2,3,4,5], orientation: [0,0,0,0,0,0], orientationMod: [1,1,1,1,1,1] },
+    CENTERS: { pieces: [0,1,2,3,4,5], orientation: [0,0,0,0,0,0] },
   };
 }
 
 // faces → 스크램블 알고리즘 문자열. cubing/search를 사용해 현재 상태 → 솔루션을 찾고 역산.
-// 모바일 WASM 초기화 지연에 대비해 최대 2회 재시도.
+// 모바일 WASM 초기화 지연에 대비해 최대 3회 재시도. 에러 메시지를 반환에 포함.
 export async function getScrambleAlg(faces) {
   const patternData = findSolvableKPatternData(faces);
   if (!patternData) return null;
 
-  const attempt = async () => {
-    const { cube3x3x3 } = await import("cubing/puzzles");
-    const { KPattern } = await import("cubing/kpuzzle");
-    const { experimentalSolve3x3x3IgnoringCenters } = await import("cubing/search");
-    const kpuzzle = await cube3x3x3.kpuzzle();
-    const kpattern = new KPattern(kpuzzle, patternData);
-    const solution = await experimentalSolve3x3x3IgnoringCenters(kpattern);
-    return solution.invert().toString();
-  };
-
+  let lastErr = null;
   for (let i = 0; i < 3; i++) {
     try {
-      return await attempt();
+      const { cube3x3x3 } = await import("cubing/puzzles");
+      const { KPattern } = await import("cubing/kpuzzle");
+      const { experimentalSolve3x3x3IgnoringCenters } = await import("cubing/search");
+      const kpuzzle = await cube3x3x3.kpuzzle();
+      // 워밍업: identity 패턴으로 WASM 초기화 보장
+      if (i === 0) {
+        try { await experimentalSolve3x3x3IgnoringCenters(kpuzzle.defaultPattern()); } catch {}
+      }
+      const kpattern = new KPattern(kpuzzle, patternData);
+      const solution = await experimentalSolve3x3x3IgnoringCenters(kpattern);
+      return solution.invert().toString();
     } catch (err) {
-      if (i === 2) console.error("[cubeConverter] getScrambleAlg 실패 (3회):", err);
-      // WASM 초기화 지연 대비: 재시도 전 잠시 대기
-      await new Promise(r => setTimeout(r, 800 * (i + 1)));
+      lastErr = err;
+      console.error(`[cubeConverter] getScrambleAlg 시도 ${i + 1} 실패:`, err?.message ?? err);
+      if (i < 2) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
     }
   }
+  console.error("[cubeConverter] getScrambleAlg 최종 실패:", lastErr);
   return null;
 }
