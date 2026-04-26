@@ -200,6 +200,7 @@ export function createScanner({ onJumpToStep } = {}) {
     const face = currentFace();
     stepLabel.textContent = `${currentFaceIdx + 1} / 6 면`;
     guide.textContent = FACE_GUIDE[face];
+    guide.hidden = false;
     resultArea.hidden = true;
     videoWrap.hidden = false;
     captureBtn.hidden = false;
@@ -251,6 +252,7 @@ export function createScanner({ onJumpToStep } = {}) {
   function showVerify() {
     videoWrap.hidden = true;
     captureBtn.hidden = true;
+    guide.hidden = true;
     resultArea.hidden = true;
     finalArea.hidden = false;
     finalArea.innerHTML = "";
@@ -375,6 +377,7 @@ export function createScanner({ onJumpToStep } = {}) {
   function showResult() {
     videoWrap.hidden = true;
     captureBtn.hidden = true;
+    guide.hidden = true;
     resultArea.hidden = true;
     finalArea.hidden = false;
     finalArea.innerHTML = "";
