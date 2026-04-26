@@ -30,7 +30,8 @@ function sampleFaceColors(video, canvas) {
   canvas.height = video.videoHeight || 480;
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  const size = Math.min(canvas.width, canvas.height) * 0.62;
+  // 0.56: 0.62에서 축소 — 측면 촬영 시 하단 행(index 6-8)이 D면 영역으로 넘어가는 오인식 방지
+  const size = Math.min(canvas.width, canvas.height) * 0.56;
   const startX = (canvas.width - size) / 2;
   const startY = (canvas.height - size) / 2;
   const cell = size / 3;
@@ -376,6 +377,7 @@ export function createScanner({ onJumpToStep } = {}) {
     const msg = el("div", { class: "scan-result-msg" });
     if (stage === 0) {
       msg.appendChild(el("div", { class: "big", text: "🎉 큐브가 이미 완성됐어요!" }));
+      finalArea.appendChild(msg);
     } else {
       const stateText = getStepStateText(stage, capturedFaces);
       const guide = generateStepGuide(stage, capturedFaces);
@@ -431,9 +433,23 @@ export function createScanner({ onJumpToStep } = {}) {
       finalArea.appendChild(msg);
       finalArea.appendChild(guideBtn);
       finalArea.appendChild(jumpBtn);
-      return;
     }
-    finalArea.appendChild(msg);
+
+    // 진단 버튼: 결과 화면에서도 항상 표시 (3D 불일치 시 데이터 확인용)
+    const dbgBtn = el("button", {
+      class: "btn btn-ghost",
+      type: "button",
+      text: "📋 진단 데이터 복사",
+      onClick: () => {
+        const json = JSON.stringify(capturedFaces, null, 2);
+        navigator.clipboard.writeText(json).then(
+          () => { dbgBtn.textContent = "✅ 복사됨"; setTimeout(() => { dbgBtn.textContent = "📋 진단 데이터 복사"; }, 2000); },
+          () => { prompt("아래 데이터를 복사하세요:", json); }
+        );
+      },
+    });
+    dbgBtn.style.fontSize = "13px";
+    finalArea.appendChild(dbgBtn);
   }
 
   async function open() {
