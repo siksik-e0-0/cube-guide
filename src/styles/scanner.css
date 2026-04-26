@@ -19,8 +19,8 @@
 }
 
 .scanner-modal {
-  background: var(--color-surface);
-  border-radius: var(--radius-xl);
+  background: var(--c-surface, #ffffff);
+  border-radius: var(--radius-lg, 24px);
   padding: 1.25rem;
   width: min(480px, 95vw);
   max-height: 92dvh;
@@ -39,7 +39,7 @@
 .scanner-step-label {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--color-muted);
+  color: var(--c-text-soft, #555555);
   letter-spacing: 0.05em;
 }
 .scanner-close {
@@ -48,9 +48,9 @@
   font-size: 1.25rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
-  color: var(--color-muted);
+  color: var(--c-text-soft, #555555);
 }
-.scanner-close:hover { color: var(--color-text); }
+.scanner-close:hover { color: var(--c-text, #222222); }
 
 /* 안내 */
 .scanner-guide {
@@ -58,8 +58,8 @@
   font-weight: 600;
   text-align: center;
   padding: 0.5rem;
-  background: var(--color-step-bg, #f7f4ee);
-  border-radius: var(--radius-md);
+  background: var(--c-surface-2, #f7f4ee);
+  border-radius: var(--radius-sm, 10px);
 }
 
 /* 카메라 영역 */
@@ -138,7 +138,7 @@
   height: 180px;
   border-radius: 8px;
   overflow: hidden;
-  border: 2px solid var(--color-border, #ddd);
+  border: 2px solid var(--c-border, #ddd);
 }
 .scan-cell {
   border-radius: 4px;
@@ -149,7 +149,7 @@
 .scan-cell:active { transform: scale(0.92); opacity: 0.7; }
 .scanner-confirm-hint {
   font-size: 0.8rem;
-  color: var(--color-muted);
+  color: var(--c-text-soft, #555555);
   text-align: center;
 }
 
@@ -184,7 +184,7 @@
 .scan-face-label {
   font-size: 0.7rem;
   font-weight: 700;
-  color: var(--color-muted, #888);
+  color: var(--c-text-soft, #888);
   letter-spacing: 0.05em;
 }
 
@@ -214,7 +214,7 @@
 /* Phase 3 가이드 블록 */
 .scan-guide-block {
   margin-top: 0.75rem;
-  border-top: 1px solid var(--color-border, #e8e2cf);
+  border-top: 1px solid var(--c-border, #e8e2cf);
   padding-top: 0.75rem;
   display: flex;
   flex-direction: column;
@@ -248,7 +248,7 @@
 }
 .scan-guide-note {
   font-size: 0.78rem;
-  color: var(--color-muted, #888);
+  color: var(--c-text-soft, #888);
   line-height: 1.4;
   padding-left: 0.25rem;
 }
@@ -256,8 +256,8 @@
 .scan-state-hint {
   margin-top: 0.5rem;
   font-size: 0.9rem;
-  color: var(--color-muted, #666);
-  background: var(--color-step-bg, #f7f4ee);
+  color: var(--c-text-soft, #666);
+  background: var(--c-surface-2, #f7f4ee);
   border-radius: 8px;
   padding: 0.4rem 0.75rem;
   text-align: center;
@@ -266,6 +266,6 @@
 .scan-result-step .big-num {
   font-size: 2.5rem;
   font-weight: 900;
-  color: var(--color-primary, #E9B44C);
+  color: var(--c-yellow, #E9B44C);
   line-height: 1;
 }
