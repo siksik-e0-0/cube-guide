@@ -143,9 +143,12 @@ export function renderStepSlide(data, { onComplete } = {}) {
   const hasCases = Array.isArray(data.cases) && data.cases.length > 0;
 
   // 메인 플레이어: cases만 있고 algorithm/demoAlg 없으면 생략
+  // player를 외부에 선언해 return 시 참조 가능하게 함
+  let player = null;
   if (hasAlg || !hasCases) {
-    const { wrap, player } = playerBlock(data);
-    left.appendChild(wrap);
+    const block = playerBlock(data);
+    player = block.player;
+    left.appendChild(block.wrap);
     if (hasAlg) {
       left.appendChild(playerControls(player));
     } else {
