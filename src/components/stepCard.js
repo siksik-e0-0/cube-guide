@@ -107,6 +107,25 @@ function caseBlock(c) {
   };
   if (c.setupAlg) attrs["experimental-setup-alg"] = c.setupAlg;
   const player = el("twisty-player", attrs);
+
+  // 강조할 엣지 피스만 컬러로, 나머지는 회색 처리
+  // CENTERS: ULFRBD 순서 → piece 5 = D = 노란색
+  if (c.maskEdge !== undefined) {
+    customElements.whenDefined("twisty-player").then(() => {
+      try {
+        const edges = Array(12).fill("dim");
+        edges[c.maskEdge] = "regular";
+        player.experimentalStickerMask = {
+          orbits: {
+            CORNERS: { pieces: Array(8).fill("dim") },
+            EDGES: { pieces: edges },
+            CENTERS: { pieces: Array(6).fill("dim").map((_, i) => i === 5 ? "regular" : "dim") },
+          },
+        };
+      } catch {}
+    });
+  }
+
   playerWrap.appendChild(player);
   wrap.appendChild(playerWrap);
 

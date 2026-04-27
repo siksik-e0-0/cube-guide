@@ -64,17 +64,20 @@ export const MAIN_STEPS = [
       {
         label: "상황① 위층에 있을 때",
         algorithm: "R' F'",
-        setupAlg: "x2 F R",
+        setupAlg: "x2 R F'",  // 흰-빨 모서리(piece 1)를 UF 위층에 배치 (잘못된 방향)
+        maskEdge: 1,
       },
       {
         label: "상황② 가운데층에 있을 때",
         algorithm: "F' R",
-        setupAlg: "x2 R' F",
+        setupAlg: "x2 R",     // 흰-빨 모서리(piece 1)를 FR 가운데층에 배치
+        maskEdge: 1,
       },
       {
         label: "상황③ 아래층에 있을 때",
         algorithm: "R F' R2",
-        setupAlg: "x2 R2 F R'",
+        setupAlg: "x2",       // 흰-빨 모서리(piece 1)를 DR 아래층에 배치
+        maskEdge: 1,
       },
     ],
     tips: [
