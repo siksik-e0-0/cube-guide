@@ -36,6 +36,7 @@ function init() {
     },
     onDaisyContinue: () => {
       slideshowDaisy.open();
+      slideshowDaisy.go(3);
     },
     onLayer3: () => {
       slideshowLayer3.open();
