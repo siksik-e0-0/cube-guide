@@ -77,20 +77,6 @@ export const MAIN_STEPS_L3 = [
     displayRotation: "",
     algorithm: "R' D' R D",
     setupAlg: "D' R' D R",
-    cases: [
-      {
-        label: "상황① 노란면이 앞면에 있을 때 (×2)",
-        algorithm: "R' D' R D R' D' R D",
-        setupAlg: "D' R' D R D' R' D R",
-        maskCorner: 4,
-      },
-      {
-        label: "상황② 노란면이 옆면에 있을 때 (×4)",
-        algorithm: "R' D' R D R' D' R D R' D' R D R' D' R D",
-        setupAlg: "D' R' D R D' R' D R D' R' D R D' R' D R",
-        maskCorner: 4,
-      },
-    ],
     tips: [
       "노란면을 아래로 뒤집어 잡아요.",
       "상황①: 노란 스티커가 앞면 → 공식(R' D' R D) 2번",
