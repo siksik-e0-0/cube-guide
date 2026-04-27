@@ -12,7 +12,7 @@ export function createTutorialSelect({ onDaisyFresh, onDaisyContinue, onLayer3 }
       icon: "🌼",
       title: "처음하기",
       desc: "데이지 방식\n처음부터 새로 시작",
-      btnText: "처음부터 ▶",
+      btnText: "처음하기 ▶",
       btnClass: "btn btn-primary",
       onClick: () => { close(); onDaisyFresh(); },
     },
