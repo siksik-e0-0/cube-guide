@@ -64,19 +64,17 @@ export const MAIN_STEPS = [
       {
         label: "상황① 위층에 있을 때",
         algorithm: "R' F'",
-        setupAlg: "F R",
+        setupAlg: "x2 F R",
       },
       {
         label: "상황② 가운데층에 있을 때",
         algorithm: "F' R",
-        // inv(F' R) = R' F
-        setupAlg: "R' F",
+        setupAlg: "x2 R' F",
       },
       {
         label: "상황③ 아래층에 있을 때",
         algorithm: "R F' R2",
-        // inv(R F' R2) = R2 F R'
-        setupAlg: "R2 F R'",
+        setupAlg: "x2 R2 F R'",
       },
     ],
     tips: [
@@ -128,19 +126,17 @@ export const MAIN_STEPS = [
       {
         label: "상황① 하얀면 자신쪽 + 왼손 쪽",
         algorithm: "L' U' L U",
-        // inv(L' U' L U) = U' L' U L
-        setupAlg: "U' L' U L",
+        setupAlg: "x2 U' L' U L",
       },
       {
         label: "상황② 하얀면 자신쪽 + 오른손 쪽",
         algorithm: "R U R' U'",
-        setupAlg: "U R U' R'",
+        setupAlg: "x2 U R U' R'",
       },
       {
         label: "상황③ 하얀면이 위를 향할 때 (×3)",
         algorithm: "R U R' U' R U R' U' R U R' U'",
-        // inv = (U R U' R') ×3
-        setupAlg: "U R U' R' U R U' R' U R U' R'",
+        setupAlg: "x2 U R U' R' U R U' R' U R U' R'",
       },
     ],
     tips: [
@@ -171,13 +167,12 @@ export const MAIN_STEPS = [
       {
         label: "상황① 오른쪽으로 넣을 때",
         algorithm: "U R U' R' U' F' U F",
-        setupAlg: "F' U' F U R U' R' U",
+        setupAlg: "x2 F' U' F U R U' R' U",
       },
       {
         label: "상황② 왼쪽으로 넣을 때",
         algorithm: "U' L' U L U F U' F'",
-        // inv(U' L' U L U F U' F') = F U' F' U' L' U L U
-        setupAlg: "F U' F' U' L' U L U",
+        setupAlg: "x2 F U' F' U' L' U L U",
       },
     ],
     tips: [
