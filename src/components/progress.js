@@ -28,6 +28,10 @@ export function setDone(id, done) {
   write(data);
 }
 
+export function clearProgress() {
+  write({});
+}
+
 export function onProgressChange(handler) {
   window.addEventListener("progress-change", (e) => handler(e.detail));
 }

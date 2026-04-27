@@ -15,7 +15,7 @@ const INTRO_RENDERERS = {
   symbols: renderSymbolsSlide,
 };
 
-export function createSlideshow(mountRoot) {
+export function createSlideshow(mountRoot, steps = ALL_STEPS) {
   const container = el("div", { class: "slideshow", hidden: true, "aria-modal": "true", role: "dialog" });
 
   const dots = el("div", { class: "ss-dots" });
@@ -61,7 +61,7 @@ export function createSlideshow(mountRoot) {
   mountRoot.appendChild(container);
 
   // Build all slide shells upfront; render inner content lazily per slide.
-  const slides = ALL_STEPS.map((s) => {
+  const slides = steps.map((s) => {
     const slideEl = el("section", { class: "ss-slide", "data-step-id": s.id });
     track.appendChild(slideEl);
     return { data: s, el: slideEl, rendered: false, player: null };

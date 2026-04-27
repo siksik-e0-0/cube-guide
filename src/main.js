@@ -2,6 +2,10 @@ import { qs } from "./util/dom.js";
 import { createSlideshow } from "./components/slideshow.js";
 import { isTtsOn, setTtsOn } from "./components/speech.js";
 import { createScanner } from "./components/scanner.js";
+import { createTutorialSelect } from "./components/tutorialSelect.js";
+import { ALL_STEPS } from "./data/steps.js";
+import { ALL_STEPS_L3 } from "./data/stepsLayer3.js";
+import { clearProgress } from "./components/progress.js";
 
 function wireTtsToggle() {
   const box = qs("#tts-toggle");
@@ -22,22 +26,36 @@ async function loadCubing() {
 
 function init() {
   const slideshowRoot = qs("#slideshow-root");
-  const slideshow = createSlideshow(slideshowRoot);
+  const slideshowDaisy = createSlideshow(slideshowRoot, ALL_STEPS);
+  const slideshowLayer3 = createSlideshow(slideshowRoot, ALL_STEPS_L3);
+
+  const tutorialSelect = createTutorialSelect({
+    onDaisyFresh: () => {
+      clearProgress();
+      slideshowDaisy.open();
+    },
+    onDaisyContinue: () => {
+      slideshowDaisy.open();
+    },
+    onLayer3: () => {
+      slideshowLayer3.open();
+    },
+  });
 
   const startBtn = qs("#start-btn");
   if (startBtn) {
     startBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      slideshow.open();
+      tutorialSelect.open();
     });
   }
 
   const scanner = createScanner({
     onJumpToStep: (stepNo) => {
-      // step1~7 → ALL_STEPS 에서 인트로 3개 다음부터
-      slideshow.open();
+      // step1~7 → daisy 슬라이드쇼에서 인트로 3개 다음부터
+      slideshowDaisy.open();
       // 인트로 3개 이후가 step1 → 인덱스 = 3 + stepNo - 1
-      setTimeout(() => slideshow.go(2 + stepNo), 80);
+      setTimeout(() => slideshowDaisy.go(2 + stepNo), 80);
     },
   });
 
