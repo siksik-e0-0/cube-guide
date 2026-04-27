@@ -130,16 +130,19 @@ export const MAIN_STEPS = [
         label: "상황① 하얀면 자신쪽 + 왼손 쪽",
         algorithm: "L' U' L U",
         setupAlg: "x2 U' L' U L",
+        maskCorner: 3,  // UFL 꼭짓점 (흰-주황-초록)
       },
       {
         label: "상황② 하얀면 자신쪽 + 오른손 쪽",
         algorithm: "R U R' U'",
         setupAlg: "x2 U R U' R'",
+        maskCorner: 0,  // UFR 꼭짓점 (흰-초록-빨강)
       },
       {
         label: "상황③ 하얀면이 위를 향할 때 (×3)",
         algorithm: "R U R' U' R U R' U' R U R' U'",
         setupAlg: "x2 U R U' R' U R U' R' U R U' R'",
+        maskCorner: 0,  // UFR 꼭짓점 (흰-초록-빨강)
       },
     ],
     tips: [
@@ -171,11 +174,13 @@ export const MAIN_STEPS = [
         label: "상황① 오른쪽으로 넣을 때",
         algorithm: "U R U' R' U' F' U F",
         setupAlg: "x2 F' U' F U R U' R' U",
+        maskEdge: 8,  // FR 모서리 (초록-빨강)
       },
       {
         label: "상황② 왼쪽으로 넣을 때",
         algorithm: "U' L' U L U F U' F'",
         setupAlg: "x2 F U' F' U' L' U L U",
+        maskEdge: 9,  // FL 모서리 (초록-주황)
       },
     ],
     tips: [
@@ -225,14 +230,14 @@ export const MAIN_STEPS = [
       {
         label: "상황① 노란면이 앞면에 있을 때 (×2)",
         algorithm: "R' D' R D R' D' R D",
-        // inv = (D' R' D R) ×2
         setupAlg: "D' R' D R D' R' D R",
+        maskCorner: 4,  // DFR 꼭짓점 (노랑-빨강-초록)
       },
       {
         label: "상황② 노란면이 옆면에 있을 때 (×4)",
         algorithm: "R' D' R D R' D' R D R' D' R D R' D' R D",
-        // inv = (D' R' D R) ×4
         setupAlg: "D' R' D R D' R' D R D' R' D R D' R' D R",
+        maskCorner: 4,  // DFR 꼭짓점 (노랑-빨강-초록)
       },
     ],
     tips: [
