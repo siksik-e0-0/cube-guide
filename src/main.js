@@ -40,6 +40,7 @@ function init() {
     },
     onLayer3: () => {
       slideshowLayer3.open();
+      slideshowLayer3.go(3);
     },
   });
 
