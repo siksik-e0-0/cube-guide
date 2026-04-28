@@ -27,15 +27,19 @@ async function loadCubing() {
 function init() {
   const slideshowRoot = qs("#slideshow-root");
   const slideshowIntro = createSlideshow(slideshowRoot, INTRO_STEPS);
-  const slideshowContinue = createSlideshow(slideshowRoot, MAIN_STEPS.slice(0, 4));
+  const slideshowLayer1 = createSlideshow(slideshowRoot, MAIN_STEPS.slice(0, 3));
+  const slideshowLayer2 = createSlideshow(slideshowRoot, MAIN_STEPS.slice(3, 4));
   const slideshowLayer3 = createSlideshow(slideshowRoot, ALL_STEPS_L3);
 
   const tutorialSelect = createTutorialSelect({
     onDaisyFresh: () => {
       slideshowIntro.open();
     },
-    onDaisyContinue: () => {
-      slideshowContinue.open();
+    onLayer1: () => {
+      slideshowLayer1.open();
+    },
+    onLayer2: () => {
+      slideshowLayer2.open();
     },
     onLayer3: () => {
       slideshowLayer3.open();

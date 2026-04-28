@@ -17,7 +17,7 @@
   background: var(--c-surface, #fff);
   border-radius: 20px;
   padding: 32px 24px 28px;
-  max-width: 640px;
+  max-width: 720px;
   width: 100%;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.28);
 }
@@ -39,8 +39,8 @@
 
 .tsel-card {
   flex: 1;
-  min-width: 150px;
-  max-width: 185px;
+  min-width: 128px;
+  max-width: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;

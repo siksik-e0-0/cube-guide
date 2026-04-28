@@ -1,6 +1,6 @@
 import { el } from "../util/dom.js";
 
-export function createTutorialSelect({ onDaisyFresh, onDaisyContinue, onLayer3 }) {
+export function createTutorialSelect({ onDaisyFresh, onLayer1, onLayer2, onLayer3 }) {
   const overlay = el("div", { class: "tsel-overlay" });
   overlay.hidden = true;
 
@@ -11,24 +11,32 @@ export function createTutorialSelect({ onDaisyFresh, onDaisyContinue, onLayer3 }
     {
       icon: "🌼",
       title: "처음하기",
-      desc: "데이지 방식\n처음부터 새로 시작",
+      desc: "큐브 기초\n용어·기호 배우기",
       btnText: "처음하기 ▶",
       btnClass: "btn btn-primary",
       onClick: () => { close(); onDaisyFresh(); },
     },
     {
-      icon: "📖",
-      title: "기존",
-      desc: "데이지 방식\n이어서 계속하기",
-      btnText: "이어서 ▶",
+      icon: "1️⃣",
+      title: "Layer 1",
+      desc: "흰색 층 완성\n(데이지·십자·층)",
+      btnText: "Layer1 ▶",
       btnClass: "btn btn-primary",
-      onClick: () => { close(); onDaisyContinue(); },
+      onClick: () => { close(); onLayer1(); },
     },
     {
-      icon: "🔲",
-      title: "Layer3",
-      desc: "층별(LBL) 방식\n7단계 공식",
-      btnText: "Layer3 시작 ▶",
+      icon: "2️⃣",
+      title: "Layer 2",
+      desc: "가운데 층 완성\n(모서리 끼우기)",
+      btnText: "Layer2 ▶",
+      btnClass: "btn btn-primary",
+      onClick: () => { close(); onLayer2(); },
+    },
+    {
+      icon: "3️⃣",
+      title: "Layer 3",
+      desc: "노란 층 완성\n(마지막 층 4단계)",
+      btnText: "Layer3 ▶",
       btnClass: "btn btn-yellow",
       onClick: () => { close(); onLayer3(); },
     },
