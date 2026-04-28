@@ -151,8 +151,7 @@ function caseBlock(c) {
 }
 
 export function renderStepSlide(data, { onComplete } = {}) {
-  const cubeBottom = data.id === "step4" || data.id.startsWith("l3-");
-  const grid = el("div", { class: `slide-grid${cubeBottom ? " cube-bottom" : ""}`, "data-step-id": data.id });
+  const grid = el("div", { class: "slide-grid cube-bottom", "data-step-id": data.id });
 
   // LEFT: cube + player controls + move sequence
   const left = el("div", { class: "slide-left" });
