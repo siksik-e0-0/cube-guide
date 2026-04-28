@@ -381,11 +381,16 @@
 /* 상황별 케이스 3D 큐브 */
 .cases-section {
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin-top: 1rem;
   border-top: 2px solid var(--c-border, #E8E2CF);
   padding-top: 1rem;
+}
+.cases-section .case-block {
+  flex: 1;
+  min-width: 120px;
 }
 
 .case-block {
