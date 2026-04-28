@@ -103,7 +103,15 @@
   .slide-left { min-height: 0; }
   .player-wrap { min-height: 50vh; }
   .player-wrap twisty-player { min-height: 48vh; }
+  /* cube-bottom: 항상 1컬럼 유지 */
+  .slide-grid.cube-bottom { grid-template-columns: 1fr; }
 }
+/* Layer2·Layer3: 콘텐츠(right) 위, 3D큐브(left) 아래 */
+.slide-grid.cube-bottom {
+  grid-template-rows: auto auto;
+}
+.slide-grid.cube-bottom .slide-right { order: 1; }
+.slide-grid.cube-bottom .slide-left  { order: 2; }
 .slide-left {
   display: flex;
   flex-direction: column;
