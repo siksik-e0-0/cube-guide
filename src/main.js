@@ -30,6 +30,8 @@ function init() {
   const slideshowLayer1 = createSlideshow(slideshowRoot, MAIN_STEPS.slice(0, 3));
   const slideshowLayer2 = createSlideshow(slideshowRoot, MAIN_STEPS.slice(3, 4));
   const slideshowLayer3 = createSlideshow(slideshowRoot, ALL_STEPS_L3);
+  // scanner 전용: 전체 daisy 슬라이드쇼 (onJumpToStep 이동 기준)
+  const slideshowDaisy = createSlideshow(slideshowRoot, ALL_STEPS);
 
   const tutorialSelect = createTutorialSelect({
     onDaisyFresh: () => {
@@ -57,9 +59,7 @@ function init() {
 
   const scanner = createScanner({
     onJumpToStep: (stepNo) => {
-      // step1~7 → daisy 슬라이드쇼에서 인트로 3개 다음부터
       slideshowDaisy.open();
-      // 인트로 3개 이후가 step1 → 인덱스 = 3 + stepNo - 1
       setTimeout(() => slideshowDaisy.go(2 + stepNo), 80);
     },
   });
