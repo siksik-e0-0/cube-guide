@@ -35,10 +35,10 @@ export const MAIN_STEPS_L3 = [
     bubble: "십자는 완성됐지만 옆면 센터 색과 안 맞는 경우예요. 맞는 모서리를 뒤·오른쪽에 두고 공식!",
     orientation: "노란 면이 위. 완성된 면을 뒤로.",
     displayRotation: "x2",
-    algorithm: "R U' R' U' R U2 R'",
-    setupAlg: "R U2 R' U R U R'",
+    algorithm: "R U R' U R U2 R'",
+    setupAlg: "R U2 R' U' R U' R'",
     tips: [
-      "공식: R U' R' U' R U2 R'",
+      "공식: R U R' U R U2 R'",
       "마주보는 경우(Opposite): 임의 방향에서 공식 1회 → 인접한 경우로 변환.",
       "인접한 경우(Adjacent): 맞는 모서리를 뒤·오른쪽에 두고 공식 1회 → 완성!",
     ],
