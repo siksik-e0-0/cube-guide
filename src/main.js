@@ -3,7 +3,7 @@ import { createSlideshow } from "./components/slideshow.js";
 import { isTtsOn, setTtsOn } from "./components/speech.js";
 import { createScanner } from "./components/scanner.js";
 import { createTutorialSelect } from "./components/tutorialSelect.js";
-import { ALL_STEPS, INTRO_STEPS } from "./data/steps.js";
+import { ALL_STEPS, INTRO_STEPS, MAIN_STEPS } from "./data/steps.js";
 import { ALL_STEPS_L3 } from "./data/stepsLayer3.js";
 import { clearProgress } from "./components/progress.js";
 
@@ -27,7 +27,7 @@ async function loadCubing() {
 function init() {
   const slideshowRoot = qs("#slideshow-root");
   const slideshowIntro = createSlideshow(slideshowRoot, INTRO_STEPS);
-  const slideshowDaisy = createSlideshow(slideshowRoot, ALL_STEPS);
+  const slideshowContinue = createSlideshow(slideshowRoot, MAIN_STEPS.slice(0, 4));
   const slideshowLayer3 = createSlideshow(slideshowRoot, ALL_STEPS_L3);
 
   const tutorialSelect = createTutorialSelect({
@@ -35,8 +35,7 @@ function init() {
       slideshowIntro.open();
     },
     onDaisyContinue: () => {
-      slideshowDaisy.open();
-      slideshowDaisy.go(3);
+      slideshowContinue.open();
     },
     onLayer3: () => {
       slideshowLayer3.open();
