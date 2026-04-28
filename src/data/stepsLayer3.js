@@ -89,4 +89,4 @@ export const MAIN_STEPS_L3 = [
   },
 ];
 
-export const ALL_STEPS_L3 = [...INTRO_STEPS, ...MAIN_STEPS_L3];
+export const ALL_STEPS_L3 = MAIN_STEPS_L3;

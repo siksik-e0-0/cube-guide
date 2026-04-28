@@ -165,6 +165,11 @@ export function renderStepSlide(data, { onComplete } = {}) {
     const casesSection = el("div", { class: "cases-section" });
     data.cases.forEach(c => casesSection.appendChild(caseBlock(c)));
     left.appendChild(casesSection);
+  } else if (hasAlg) {
+    const { wrap, player: p } = playerBlock(data);
+    player = p;
+    left.appendChild(wrap);
+    left.appendChild(playerControls(p));
   }
 
   // RIGHT: title + mascot + orientation + tips + checkpoint + video + complete
