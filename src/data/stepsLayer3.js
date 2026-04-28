@@ -54,8 +54,8 @@ export const MAIN_STEPS_L3 = [
     bubble: "이미 제 위치인 꼭짓점을 오른쪽 앞(5시)에 두고 공식! 나머지 3개가 이동해요.",
     orientation: "노란 면이 위.",
     displayRotation: "x2",
-    algorithm: "U R U' L' U R' U' L",
-    setupAlg: "L' U R U' L U R' U'",
+    algorithm: "U' R U L' U' R' U L",
+    setupAlg: "L' U' R U L U' R' U",
     tips: [
       "4개의 꼭짓점 중 이미 제 위치인 조각을 찾아 오른쪽 앞(5시)으로 이동해요.",
       "공식: U R U' L' U R' U' L",
