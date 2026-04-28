@@ -29,7 +29,7 @@ export function createTutorialSelect({ onDaisyFresh, onLayer1, onLayer2, onLayer
       title: "Layer 2",
       desc: "가운데 층 완성\n(모서리 끼우기)",
       btnText: "Layer2 ▶",
-      btnClass: "btn btn-primary",
+      btnClass: "btn btn-orange",
       onClick: () => { close(); onLayer2(); },
     },
     {

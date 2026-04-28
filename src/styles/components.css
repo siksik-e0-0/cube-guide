@@ -24,6 +24,7 @@
 
 .btn-primary { background: var(--c-accent); color: var(--c-accent-ink); }
 .btn-yellow { background: var(--c-yellow); color: #222; }
+.btn-orange { background: var(--c-orange); color: #fff; }
 .btn-ghost { background: transparent; border-color: var(--c-border); }
 .btn-done { background: var(--c-success); color: #fff; }
 
