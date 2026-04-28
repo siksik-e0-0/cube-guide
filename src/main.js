@@ -57,10 +57,14 @@ function init() {
     });
   }
 
+  // scanner stage(1~7) → daisy ALL_STEPS 인덱스 매핑
+  // ALL_STEPS: [intro×3, step1(3), step2(4), step3(5), step4(6), step5(7), step6(8), step7(9), step8(10)]
+  const STAGE_TO_STEP_NO = [0, 1, 3, 4, 5, 6, 7, 8]; // index=stage, value=step.no
   const scanner = createScanner({
-    onJumpToStep: (stepNo) => {
+    onJumpToStep: (stage) => {
+      const stepNo = STAGE_TO_STEP_NO[stage] ?? stage;
       slideshowDaisy.open();
-      setTimeout(() => slideshowDaisy.go(2 + stepNo), 80);
+      setTimeout(() => slideshowDaisy.go(stepNo + 2), 80);
     },
   });
 

@@ -39,8 +39,16 @@ function buildFaceCross(faces, { editable = false, onChange } = {}) {
   return cross;
 }
 
-function stepData(step) {
-  return MAIN_STEPS.find(s => s.no === step) ?? null;
+// scanner stage(1~7) → daisy step.no 매핑
+// stage 1 = whiteCross 미완 → step1(데이지)
+// stage 2 = whiteLayer 미완 → step3(흰층)
+// stage 3 = midLayer 미완   → step4(가운데층)
+// stage 4~7 → step5~8 (순서대로)
+const STAGE_TO_STEP_NO = [0, 1, 3, 4, 5, 6, 7, 8];
+
+function stepData(stage) {
+  const no = STAGE_TO_STEP_NO[stage] ?? stage;
+  return MAIN_STEPS.find(s => s.no === no) ?? null;
 }
 
 function playerEl(setupAlg, alg) {
@@ -111,7 +119,8 @@ export function createPersonalGuide({ faces, startStep, onJumpToStep }) {
 
     // 헤더
     const hdr = el("div", { class: "pg-header" });
-    hdr.appendChild(el("span", { class: "pg-progress", text: `${step} / 7 단계` }));
+    const stepNo = STAGE_TO_STEP_NO[step] ?? step;
+    hdr.appendChild(el("span", { class: "pg-progress", text: `${stepNo} / 8 단계` }));
     hdr.appendChild(el("button", { class: "pg-close", type: "button", text: "✕", onClick: () => close() }));
     modal.appendChild(hdr);
 
