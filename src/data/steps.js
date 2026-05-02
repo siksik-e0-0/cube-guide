@@ -162,7 +162,7 @@ export const MAIN_STEPS = [
     title: "가운데 층 모서리",
     subtitleEn: "Solve the Middle Layer",
     bubble: "아래층에서 노란색이 없는 모서리를 찾아 가운데 층에 끼워요. 오른쪽·왼쪽 공식을 써요.",
-    orientation: "하얀 면이 위, 노랑 면이 아래.",
+    orientation: "노란 면이 위. 하얀 면이 아래.",
     displayRotation: "x2",
     algorithm: "U R U' R' U' F' U F",
     altAlgorithm: "U' L' U L U F U' F'",
