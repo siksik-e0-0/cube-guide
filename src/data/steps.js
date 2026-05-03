@@ -74,9 +74,15 @@ export const MAIN_STEPS = [
         maskEdge: 1,
       },
       {
-        label: "상황③ 아래층에 있을 때",
-        algorithm: "R F' R2",
-        setupAlg: "x2",       // 흰-빨 모서리(piece 1)를 DR 아래층에 배치
+        label: "상황③-1 아래층 (R·F')",
+        algorithm: "R F'",
+        setupAlg: "x2",
+        maskEdge: 1,
+      },
+      {
+        label: "상황③-2 아래층 (R·R)",
+        algorithm: "R2",
+        setupAlg: "x2 R F'",
         maskEdge: 1,
       },
     ],
