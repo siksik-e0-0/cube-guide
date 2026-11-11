@@ -1,6 +1,6 @@
 import { el } from "../util/dom.js";
 
-export function createTutorialSelect({ onDaisyFresh, onLayer1, onLayer2, onLayer3 }) {
+export function createTutorialSelect({ onDaisyFresh, onLayer1, onLayer2, onLayer3, on2x2 }) {
   const overlay = el("div", { class: "tsel-overlay" });
   overlay.hidden = true;
 
@@ -39,6 +39,14 @@ export function createTutorialSelect({ onDaisyFresh, onLayer1, onLayer2, onLayer
       btnText: "Layer3 ▶",
       btnClass: "btn btn-yellow",
       onClick: () => { close(); onLayer3(); },
+    },
+    {
+      icon: "🟩",
+      title: "2×2 큐브",
+      desc: "2×2 큐브 완성\n(3단계 OLL·PLL)",
+      btnText: "2×2 ▶",
+      btnClass: "btn btn-green",
+      onClick: () => { close(); on2x2(); },
     },
   ];
 

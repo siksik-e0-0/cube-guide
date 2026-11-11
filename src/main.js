@@ -5,6 +5,7 @@ import { createScanner } from "./components/scanner.js";
 import { createTutorialSelect } from "./components/tutorialSelect.js";
 import { ALL_STEPS, INTRO_STEPS, MAIN_STEPS } from "./data/steps.js";
 import { ALL_STEPS_L3 } from "./data/stepsLayer3.js";
+import { STEPS_2X2 } from "./data/steps2x2.js";
 import { clearProgress } from "./components/progress.js";
 
 function wireTtsToggle() {
@@ -30,6 +31,7 @@ function init() {
   const slideshowLayer1 = createSlideshow(slideshowRoot, MAIN_STEPS.slice(0, 3));
   const slideshowLayer2 = createSlideshow(slideshowRoot, MAIN_STEPS.slice(3, 4));
   const slideshowLayer3 = createSlideshow(slideshowRoot, ALL_STEPS_L3);
+  const slideshow2x2 = createSlideshow(slideshowRoot, STEPS_2X2);
   // scanner 전용: 전체 daisy 슬라이드쇼 (onJumpToStep 이동 기준)
   const slideshowDaisy = createSlideshow(slideshowRoot, ALL_STEPS);
 
@@ -45,6 +47,9 @@ function init() {
     },
     onLayer3: () => {
       slideshowLayer3.open();
+    },
+    on2x2: () => {
+      slideshow2x2.open();
     },
   });
 
