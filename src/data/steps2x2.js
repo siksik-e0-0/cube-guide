@@ -29,10 +29,10 @@ export const STEPS_2X2 = [
     no: 2,
     title: "자리 맞추기",
     subtitleEn: "Permute Last Layer",
-    bubble: "자기 자리인 조각을 오른쪽 앞에 두고, 오른손 트위스트 3번 → 위 조각을 왼쪽 앞으로 → 왼손 트위스트 3번!",
+    bubble: "자기 자리인 조각을 오른쪽 앞에 두고 오른손 트위스트 3번(아래 데모), 그 다음 위 조각을 왼쪽 앞으로 옮겨 왼손 트위스트 3번!",
     orientation: "하얀 면이 아래, 노란 면이 위.",
     displayRotation: "x2",
-    algorithm: "R B R' B' R B R' B' R B R' B' U2 L' B' L B L' B' L B L' B' L B",
+    algorithm: "R B R' B' R B R' B' R B R' B'",
     setupAlg: "",
     tips: [
       "자기 자리 확인: 아래 조각 하나 선택 → 뒷면 돌려 위에서 같은 색 조각 찾기 → 그 쌍이 '자기 자리'.",
